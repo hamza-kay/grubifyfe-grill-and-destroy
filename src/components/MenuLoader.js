@@ -9,17 +9,14 @@ import {
 } from "@/utils/api";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import * as Tabs from "@radix-ui/react-tabs";
-import ItemModal from "@/components/ItemModal";
 import MenuItem from "@/components/MenuItem";
-import { useState, useMemo } from "react";
+import ItemModal from "@/components/ItemModal";
+import { useState } from "react";
 
 export default function MenuLoader() {
   const { appId, loading } = useAppId();
   const [selectedItem, setSelectedItem] = useState(null);
-  const [activeSectionId, setActiveSectionId] = useState("all");
 
-  // ✅ Fetch restaurant data
   const {
     data: restaurantData,
     isLoading: isLoadingRestaurant,
@@ -32,7 +29,6 @@ export default function MenuLoader() {
 
   const menuId = restaurantData?.id;
 
-  // ✅ Fetch sections
   const {
     data: sections = [],
     isLoading: isLoadingSections,
@@ -43,34 +39,24 @@ export default function MenuLoader() {
     queryFn: () => fetchSections(menuId, appId),
   });
 
-  // ✅ Fetch items for active section
   const {
-    data: sectionItems = [],
+    data: allSectionItems = [],
     isLoading: isLoadingSectionItems,
     isError: isErrorSectionItems,
-    refetch: refetchSectionItems,
   } = useQuery({
-    queryKey: ["sectionItems", activeSectionId, appId],
+    queryKey: ["allSectionItems", sections, appId],
     queryFn: () =>
-      activeSectionId === "all"
-        ? Promise.all(
-            sections.map((s) =>
-              fetchSectionItems(s.id, appId)
-            )
-          ).then((all) => all.flat())
-        : fetchSectionItems(activeSectionId, appId),
-    enabled: !!activeSectionId && !!appId,
+      Promise.all(
+        sections.map((section) =>
+          fetchSectionItems(section.id, appId).then((items) => ({
+            sectionId: section.id,
+            sectionTitle: section.title,
+            items,
+          }))
+        )
+      ),
+    enabled: sections.length > 0 && !!appId,
   });
-
-  // ✅ Compute active section title
-  const activeSectionTitle = useMemo(() => {
-    if (activeSectionId === "all") return "All Menu Items";
-    return (
-      sections.find(
-        (s) => s.id.toString() === activeSectionId
-      )?.title || ""
-    );
-  }, [activeSectionId, sections]);
 
   if (
     loading ||
@@ -103,7 +89,7 @@ export default function MenuLoader() {
           Error loading menu.
         </p>
         <button
-          onClick={() => refetchSectionItems()}
+          onClick={() => window.location.reload()}
           className="bg-blue-600 text-white px-4 py-2 rounded"
         >
           Retry
@@ -117,51 +103,50 @@ export default function MenuLoader() {
       <Header title={restaurantData?.title || "Menu"} />
 
       <main className="max-w-7xl mx-auto px-4 py-6">
-        {/* ✅ Tabs UI */}
-        <Tabs.Root
-          value={activeSectionId}
-          onValueChange={(val) => setActiveSectionId(val)}
-        >
-          <Tabs.List className="flex flex-wrap gap-3 border-b border-gray-200 pb-2 mb-6">
-            <Tabs.Trigger
-              value="all"
-              className="px-4 py-2 text-sm font-medium rounded-full border border-gray-300 hover:bg-gray-100 data-[state=active]:bg-blue-600 data-[state=active]:text-white transition"
-            >
-              All
-            </Tabs.Trigger>
-            {sections.map((section) => (
-              <Tabs.Trigger
-                key={section.id}
-                value={section.id.toString()}
-                className="px-4 py-2 text-sm font-medium rounded-full border border-gray-300 hover:bg-gray-100 data-[state=active]:bg-blue-600 data-[state=active]:text-white transition"
-              >
-                {section.title}
-              </Tabs.Trigger>
-            ))}
-          </Tabs.List>
-        </Tabs.Root>
+        {/* Scrollable section links */}
+        <div className="flex flex-wrap gap-3 border-b border-gray-200 pb-2 mb-6">
+          {sections.map((section) => (
+     <a
+  key={section.id}
+  onClick={() => {
+    document
+      .getElementById(`section-${section.id}`)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }}
+  className="px-4 py-2 text-sm font-medium rounded-full border border-gray-300 hover:bg-gray-100 transition cursor-pointer"
+>
+  {section.title}
+</a>
 
-        <h3 className="text-xl font-semibold mb-4">
-          {activeSectionTitle}
-        </h3>
+          ))}
+        </div>
 
-        {sectionItems.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {sectionItems.map((item) => (
-              <div
-                key={item.id}
-                onClick={() => setSelectedItem(item)}
-                className="cursor-pointer"
-              >
-                <MenuItem item={item} />
+        {/* Render all sections */}
+        {allSectionItems.map((section) => (
+          <div key={section.sectionId} id={`section-${section.sectionId}`} className="mb-10">
+            <h3 className="text-xl font-semibold mb-4">
+              {section.sectionTitle}
+            </h3>
+
+            {section.items.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {section.items.map((item) => (
+                  <div
+                    key={item.id}
+                    onClick={() => setSelectedItem(item)}
+                    className="cursor-pointer"
+                  >
+                    <MenuItem item={item} />
+                  </div>
+                ))}
               </div>
-            ))}
+            ) : (
+              <p className="text-gray-500">
+                No items found in this section.
+              </p>
+            )}
           </div>
-        ) : (
-          <p className="text-gray-500 mt-4">
-            No items found in this section.
-          </p>
-        )}
+        ))}
 
         {selectedItem && (
           <ItemModal
