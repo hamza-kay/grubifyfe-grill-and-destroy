@@ -1,9 +1,15 @@
 "use client";
 
-export default function Header({ title }) {
+import { useCartStore } from "@/store/useCartStore";
+
+export default function Header() {
+  const totalItems = useCartStore((state) => state.totalItems());
+
   return (
-    <header style={{ padding: "1rem", borderBottom: "1px solid #ccc" }}>
-      <h1>{title}</h1>
+    <header>
+      <div>
+        <span>Cart Items: {totalItems}</span>
+      </div>
     </header>
   );
 }

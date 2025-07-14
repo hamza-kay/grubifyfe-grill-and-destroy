@@ -1,11 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useCartStore } from "@/store/useCartStore";
 
 export default function ItemModal({ item, onClose }) {
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedVariation, setSelectedVariation] = useState(null);
   const [selectedAddons, setSelectedAddons] = useState([]);
+  const [quantity, setQuantity] = useState(1);
+
+  const addToCart = useCartStore((state) => state.addToCart);
 
   useEffect(() => {
     if (item?.sizes) {
@@ -23,11 +27,8 @@ export default function ItemModal({ item, onClose }) {
   };
 
   function formatPrice(value) {
-  return typeof value === "number"
-    ? value.toFixed(2)
-    : "N/A";
-}
-
+    return typeof value === "number" ? value.toFixed(2) : "N/A";
+  }
 
   const calculatePrice = () => {
     let basePrice = item.sizes?.[selectedSize] || item.price || 0;
@@ -95,7 +96,7 @@ export default function ItemModal({ item, onClose }) {
                   checked={selectedSize === size}
                   onChange={() => setSelectedSize(size)}
                 />
-                {size}” - £{size}” - £{formatPrice(item.sizes?.[size])}
+                {size}” - £{formatPrice(item.sizes?.[size])}
               </label>
             ))}
           </div>
@@ -117,7 +118,7 @@ export default function ItemModal({ item, onClose }) {
                 {item.variation[key].name}
                 {selectedSize &&
                   item.variation[key].prices[selectedSize] > 0 &&
-                  ` (+£${formatPrice(item.variation[key].prices?.[selectedSize])}`}
+                  ` (+£${formatPrice(item.variation[key].prices?.[selectedSize])})`}
               </label>
             ))}
           </div>
@@ -150,12 +151,54 @@ export default function ItemModal({ item, onClose }) {
           </div>
         )}
 
+        {/* Quantity */}
+        <div style={{ marginTop: "1rem" }}>
+          <label>
+            Quantity:
+            <input
+              type="number"
+              min="1"
+              value={quantity}
+              onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
+              style={{ width: "60px", marginLeft: "10px" }}
+            />
+          </label>
+        </div>
+
         <h3>Total Price: £{calculatePrice()}</h3>
+
+        <button
+          onClick={() => {
+            addToCart({
+              id: item.id,
+              name: item.name,
+              price: item.price,
+              quantity,
+              selectedAddons,
+              selectedSize,
+              selectedVariation,
+              totalPrice: parseFloat(calculatePrice()) * quantity,
+            });
+            onClose();
+          }}
+          style={{
+            marginTop: "1rem",
+            padding: "0.5rem 1rem",
+            background: "green",
+            color: "#fff",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+          }}
+        >
+          Add to Cart
+        </button>
 
         <button
           onClick={onClose}
           style={{
             marginTop: "1rem",
+            marginLeft: "10px",
             padding: "0.5rem 1rem",
             background: "dodgerblue",
             color: "#fff",

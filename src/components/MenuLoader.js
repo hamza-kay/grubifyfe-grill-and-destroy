@@ -1,30 +1,33 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { useAppId } from "@/components/AppIdProvider";
-import { useEffect, useState } from "react";
 import { fetchMenuData } from "@/utils/api";
 import Header from "@/components/Header";
 import Menu from "@/components/Menu";
 
 export default function MenuLoader() {
   const { appId, loading } = useAppId();
-  const [menuData, setMenuData] = useState(null);
-  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    if (!loading && appId) {
-      fetchMenuData(appId)
-        .then((data) => setMenuData(data))
-        .catch((e) => {
-          console.error(e);
-          setError(e);
-        });
-    }
-  }, [appId, loading]);
+  const {
+    data: menuData,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["menuData", appId],
+    queryFn: () => fetchMenuData(appId),
+    enabled: !!appId && !loading,
+  });
 
-  if (loading) return <div>Loading app ID...</div>;
-  if (error) return <div>Error loading menu.</div>;
-  if (!menuData) return <div>Loading menu...</div>;
+  if (loading || isLoading) return <div>Loading menu...</div>;
+
+  if (isError) {
+    console.error(error);
+    return <div>Error loading menu.</div>;
+  }
+
+  if (!menuData) return <div>No menu data found.</div>;
 
   return (
     <>

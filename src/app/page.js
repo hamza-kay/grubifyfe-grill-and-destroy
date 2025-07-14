@@ -1,41 +1,56 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
+import { useAppId } from "@/components/AppIdProvider";
 import SectionsLoader from "@/components/SectionsLoader";
 import MenuLoader from "@/components/MenuLoader";
 import { fetchMenuData, fetchSectionItems } from "@/utils/api";
-import { useAppId } from "@/components/AppIdProvider";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ItemModal from "@/components/ItemModal";
+import ShoppingCart from "@/components/ShoppingCart";
+import Link from "next/link";
+
+
+
 
 export default function HomePage() {
   const { appId, loading } = useAppId();
-  const [menuId, setMenuId] = useState(null);
-  const [items, setItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedSection, setSelectedSection] = useState(null);
 
-  useEffect(() => {
-    if (!loading && appId) {
-      fetchMenuData(appId)
-        .then((data) => {
-          console.log("Fetched menu data:", data);
-          setMenuId(data.id);
-        })
-        .catch((e) => console.error(e));
-    }
-  }, [loading, appId]);
+  // ✅ fetchMenuData
+  const {
+    data: menuData,
+    isLoading: isLoadingMenu,
+    isError: isErrorMenu,
+  } = useQuery({
+    queryKey: ["menuData", appId],
+    queryFn: () => fetchMenuData(appId),
+    enabled: !!appId && !loading,
+  });
+
+  const menuId = menuData?.id;
+
+  // ✅ fetchSectionItems
+  const {
+    data: items = [],
+    isLoading: isLoadingItems,
+    isError: isErrorItems,
+  } = useQuery({
+    queryKey: ["sectionItems", selectedSection, appId],
+    queryFn: () => fetchSectionItems(selectedSection, appId),
+    enabled: !!selectedSection && !!appId && !loading,
+  });
 
   const handleSectionSelect = (sectionId) => {
-    if (!loading && appId) {
-      fetchSectionItems(sectionId, appId)
-        .then((data) => {
-          console.log("Fetched items:", data);
-          setItems(data);
-        })
-        .catch((e) => console.error(e));
-    }
+    console.log("Section clicked:", sectionId);
+    setSelectedSection(sectionId);
   };
 
-  console.log("HomePage render:", { menuId, appId, loading });
+  console.log("HomePage render:", { menuId, appId, loading, selectedSection });
+
+  if (loading || isLoadingMenu) return <div>Loading menu...</div>;
+  if (isErrorMenu) return <div>Error loading menu.</div>;
 
   return (
     <main>
@@ -52,7 +67,11 @@ export default function HomePage() {
 
       <h3>Items in Section</h3>
 
-      {items.length > 0 ? (
+      {isLoadingItems ? (
+        <p>Loading items...</p>
+      ) : isErrorItems ? (
+        <p>Error loading items.</p>
+      ) : items.length > 0 ? (
         <ul>
           {items.map((item) => (
             <li key={item.id}>
@@ -76,13 +95,16 @@ export default function HomePage() {
         <p>Select a section to load items.</p>
       )}
 
-      {/* ✅ ✅ THIS IS THE MISSING PIECE! */}
       {selectedItem && (
         <ItemModal
           item={selectedItem}
           onClose={() => setSelectedItem(null)}
         />
       )}
+
+
+      <Link href="/cart">View Cart</Link>
+  
     </main>
   );
 }

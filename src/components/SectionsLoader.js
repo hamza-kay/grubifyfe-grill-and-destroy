@@ -1,36 +1,37 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { useAppId } from "@/components/AppIdProvider";
-import { useEffect, useState } from "react";
 import { fetchSections } from "@/utils/api";
 
 export default function SectionsLoader({ menuId, onSectionSelect }) {
   const { appId, loading } = useAppId();
-  const [sections, setSections] = useState([]);
 
-  console.log("SectionsLoader props:", { menuId, appId, loading });
+  // ✅ EARLY RETURN if AppId not ready
+  if (loading || !appId || !menuId) {
+    return <div>Loading sections...</div>;
+  }
 
-  useEffect(() => {
-    if (!loading && appId && menuId) {
-      console.log("Fetching sections for menuId:", menuId);
+  const {
+    data: sections,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["sections", menuId, appId],
+    queryFn: () => fetchSections(menuId, appId),
+    enabled: !!menuId && !!appId,
+  });
 
-      fetchSections(menuId, appId)
-        .then((data) => {
-          console.log("Sections API response:", data);
-          console.log("First section object:", data[0]);
-          setSections(data);
-        })
-        .catch((e) => console.error("Error fetching sections:", e));
-    }
-  }, [loading, appId, menuId]);
+  if (isLoading) return <div>Loading sections...</div>;
+  if (isError) return <div>Error loading sections.</div>;
 
-  if (loading) return <div>Loading sections...</div>;
+  console.log("SectionsLoader loaded sections:", sections);
 
   return (
     <div>
       <h3>Sections Loaded!</h3>
       <pre>{JSON.stringify(sections, null, 2)}</pre>
-      {sections.map((section) => (
+      {sections?.map((section) => (
         <div
           key={section.id}
           style={{
