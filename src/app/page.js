@@ -1,23 +1,55 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { useAppId } from "@/components/AppIdProvider";
+import { fetchRestaurantData, fetchSections } from "@/utils/api";
+import Header from "@/components/Header";
 import MenuLoader from "@/components/MenuLoader";
-import Link from "next/link";
+import MobileCartBar from "@/components/MobileCartBar";
+
 
 export default function HomePage() {
-  const { loading } = useAppId();
+  const { appId, loading } = useAppId();
 
-  if (loading) {
+  const {
+    data: restaurantData,
+    isLoading: isLoadingRestaurant,
+  } = useQuery({
+    queryKey: ["restaurantData", appId],
+    enabled: !!appId && !loading,
+    queryFn: () => fetchRestaurantData(appId),
+  });
+
+  const menuId = restaurantData?.id;
+
+  const {
+    data: sections = [],
+    isLoading: isLoadingSections,
+    isError,
+  } = useQuery({
+    queryKey: ["sections", menuId, appId],
+    enabled: !!menuId && !!appId,
+    queryFn: () => fetchSections(menuId, appId),
+  });
+
+  if (loading || isLoadingRestaurant || isLoadingSections) {
     return <div>Loading...</div>;
   }
 
+  if (isError) {
+    return <div>Error loading sections.</div>;
+  }
+
   return (
-    <main className="max-w-7xl mx-auto px-4 py-6">
-      <MenuLoader />
+<>
 
-      <div className="mt-10 flex justify-center">
+  <Header sections={sections} restaurant={restaurantData} />
+  <MobileCartBar />
 
-      </div>
-    </main>
+  <main className="max-w-7xl mx-auto px-4 py-6">
+    <MenuLoader sections={sections} />
+  </main>
+</>
+
   );
 }

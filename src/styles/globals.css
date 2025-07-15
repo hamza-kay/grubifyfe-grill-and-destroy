@@ -1,5 +1,51 @@
 @import "tailwindcss";
 
-html {
-  scroll-behavior: smooth;
+@theme {
+  /* --breakpoint-sm: 375px;
+  --breakpoint-md: 768px; */
+
+  --color-primary: #1C1C1E;
+  --color-accent: #E50914;
+  --color-secondary: #B00020;
+  --color-highlight: #E9C46A;
+  --color-muted: #6B7280;
+  --color-background: #121212;
+  --color-light: #F3F4F6;
+  --color-destructive: #DC2626;
+  
+
+  --font-family-sans: var(--font-geist-sans), sans-serif;
+
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+
+  --border-radius-xl: 1rem;
+
+  --box-shadow-card: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+  --spacing-18: 4.5rem;
+}
+
+
+
+html, body {
+  font-family: var(--font-geist-sans), sans-serif;
+  font-size: 16px;
+  color: #333;
+  background: #f9f9f9;  
+  min-height: 100%;
+  scroll-behavior: smooth !important;
+  
+}
+
+a {
+ 
+  text-decoration: none;
+}
+
+h1, h2, h3 {
+  font-weight: 600;
+  line-height: 1.2;
 }

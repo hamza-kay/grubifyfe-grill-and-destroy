@@ -10,6 +10,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'https://cdn.grubify.co.uk',
       },
+        {
+      protocol: "https",
+        hostname: "api.ramtd.net",
+      },
     ],
   },
 };

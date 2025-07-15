@@ -2,18 +2,12 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useAppId } from "@/components/AppIdProvider";
-import {
-  fetchRestaurantData,
-  fetchSections,
-  fetchSectionItems,
-} from "@/utils/api";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import { fetchRestaurantData, fetchSectionItems } from "@/utils/api";
 import MenuItem from "@/components/MenuItem";
 import ItemModal from "@/components/ItemModal";
 import { useState } from "react";
 
-export default function MenuLoader() {
+export default function MenuLoader({ sections }) {
   const { appId, loading } = useAppId();
   const [selectedItem, setSelectedItem] = useState(null);
 
@@ -25,18 +19,6 @@ export default function MenuLoader() {
     queryKey: ["restaurantData", appId],
     enabled: !!appId && !loading,
     queryFn: () => fetchRestaurantData(appId),
-  });
-
-  const menuId = restaurantData?.id;
-
-  const {
-    data: sections = [],
-    isLoading: isLoadingSections,
-    isError: isErrorSections,
-  } = useQuery({
-    queryKey: ["sections", menuId, appId],
-    enabled: !!menuId && !!appId,
-    queryFn: () => fetchSections(menuId, appId),
   });
 
   const {
@@ -61,11 +43,11 @@ export default function MenuLoader() {
   if (
     loading ||
     isLoadingRestaurant ||
-    isLoadingSections ||
     isLoadingSectionItems
   ) {
     return (
-      <main className="max-w-7xl mx-auto px-4 py-6">
+     <main className="max-w-7xl mx-auto px-4 pt-0 pb-6">
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {Array.from({ length: 6 }).map((_, idx) => (
             <div
@@ -80,7 +62,6 @@ export default function MenuLoader() {
 
   if (
     isErrorRestaurant ||
-    isErrorSections ||
     isErrorSectionItems
   ) {
     return (
@@ -98,65 +79,51 @@ export default function MenuLoader() {
     );
   }
 
-  return (
-    <>
-      <Header title={restaurantData?.title || "Menu"} />
-
-      <main className="max-w-7xl mx-auto px-4 py-6">
-        {/* Scrollable section links */}
-        <div className="flex flex-wrap gap-3 border-b border-gray-200 pb-2 mb-6">
-          {sections.map((section) => (
-     <a
-  key={section.id}
-  onClick={() => {
-    document
-      .getElementById(`section-${section.id}`)
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }}
-  className="px-4 py-2 text-sm font-medium rounded-full border border-gray-300 hover:bg-gray-100 transition cursor-pointer"
+return (
+  <main className="max-w-7xl mx-auto px-4 pt-0 pb-6">
+    {allSectionItems.map((section) => (
+      <div
+        key={section.sectionId}
+        className="mb-6"
+      >
+<h3
+  id={`section-${section.sectionId}`}
+  data-section-id={section.sectionId}
+  className="text-xl font-semibold mt-8 mb-2  text-gray-800"
 >
-  {section.title}
-</a>
+  {section.sectionTitle}
+</h3>
 
-          ))}
-        </div>
 
-        {/* Render all sections */}
-        {allSectionItems.map((section) => (
-          <div key={section.sectionId} id={`section-${section.sectionId}`} className="mb-10">
-            <h3 className="text-xl font-semibold mb-4">
-              {section.sectionTitle}
-            </h3>
 
-            {section.items.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {section.items.map((item) => (
-                  <div
-                    key={item.id}
-                    onClick={() => setSelectedItem(item)}
-                    className="cursor-pointer"
-                  >
-                    <MenuItem item={item} />
-                  </div>
-                ))}
+        {section.items.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {section.items.map((item) => (
+              <div
+                key={item.id}
+                onClick={() => setSelectedItem(item)}
+                className="cursor-pointer"
+              >
+                <MenuItem item={item} />
               </div>
-            ) : (
-              <p className="text-gray-500">
-                No items found in this section.
-              </p>
-            )}
+            ))}
           </div>
-        ))}
-
-        {selectedItem && (
-          <ItemModal
-            item={selectedItem}
-            onClose={() => setSelectedItem(null)}
-          />
+        ) : (
+          <p className="text-gray-500">
+            No items found in this section.
+          </p>
         )}
-      </main>
+      </div>
+    ))}
 
-      <Footer />
-    </>
-  );
+    {selectedItem && (
+      <ItemModal
+        item={selectedItem}
+        onClose={() => setSelectedItem(null)}
+      />
+    )}
+  </main>
+);
+
+
 }
