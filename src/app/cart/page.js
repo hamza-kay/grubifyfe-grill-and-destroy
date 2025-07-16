@@ -1,34 +1,24 @@
 "use client";
 
-import { useCartStore } from "@/store/useCartStore";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import ShoppingCart from "@/components/ShoppingCart";
-
+import CartForm from "@/components/CartForm";
+import OrderSummary from "@/components/OrderSummary";
+console.log("CartForm:", CartForm);
+console.log("Summary:", OrderSummary);
 export default function CartPage() {
-  const cartItems = useCartStore((state) => state.cartItems);
-  const router = useRouter();
-
-  useEffect(() => {
-    if (cartItems.length === 0) {
-      router.push("/");
-    }
-  }, [cartItems, router]);
-
   return (
-    <main
-      style={{
-        padding: "2rem",
-        maxWidth: "800px",
-        margin: "0 auto",
-        fontFamily: "sans-serif"
-      }}
-    >
-      <h1 style={{ marginBottom: "1.5rem" }}>Your Cart</h1>
+    <main className="max-w-7xl mx-auto px-4 py-10">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        {/* Left: Checkout Form */}
+        <div className="lg:col-span-2">
+          <CartForm />
+          
+        </div>
 
-      <ShoppingCart />
-
-
+        {/* Right: Order Summary */}
+        <div className="lg:col-span-1">
+          <OrderSummary />
+        </div>
+      </div>
     </main>
   );
 }

@@ -1,13 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useCartStore } from "@/store/useCartStore";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
 
 export default function ItemModal({ item, onClose }) {
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedVariation, setSelectedVariation] = useState(null);
   const [selectedAddons, setSelectedAddons] = useState([]);
   const [quantity, setQuantity] = useState(1);
+  const modalRef = useRef(null);
 
   const addToCart = useCartStore((state) => state.addToCart);
 
@@ -18,6 +21,40 @@ export default function ItemModal({ item, onClose }) {
     }
   }, [item]);
 
+  // ESC key listener
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, [onClose]);
+
+  // Outside click listener
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        onClose();
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [onClose]);
+
+  // Back button listener (popstate)
+  useEffect(() => {
+    window.history.pushState(null, "", window.location.href);
+    const handlePopState = () => {
+      onClose();
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [onClose]);
+
   const toggleAddon = (addonName) => {
     setSelectedAddons((prev) =>
       prev.includes(addonName)
@@ -26,11 +63,7 @@ export default function ItemModal({ item, onClose }) {
     );
   };
 
-  function formatPrice(value) {
-    return typeof value === "number" ? value.toFixed(2) : "N/A";
-  }
-
-  const calculatePrice = () => {
+  const totalPrice = useMemo(() => {
     let basePrice = item.sizes?.[selectedSize] || item.price || 0;
 
     if (selectedVariation && item.variation?.[selectedVariation]) {
@@ -42,7 +75,6 @@ export default function ItemModal({ item, onClose }) {
     if (item.addons) {
       selectedAddons.forEach((addon) => {
         const addonData = item.addons[addon];
-
         if (typeof addonData === "object" && selectedSize) {
           addonTotal += addonData[selectedSize] || 0;
         } else {
@@ -52,163 +84,228 @@ export default function ItemModal({ item, onClose }) {
     }
 
     return (basePrice + addonTotal).toFixed(2);
-  };
+  }, [selectedSize, selectedVariation, selectedAddons, item]);
 
   if (!item) return null;
 
+  const handleAdd = () => {
+    addToCart({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      quantity,
+      selectedAddons,
+      selectedSize,
+      selectedVariation,
+      totalPrice: parseFloat(totalPrice) * quantity,
+    });
+    onClose();
+  };
+
   return (
-    <div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: "rgba(0,0,0,0.6)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        zIndex: 999,
-      }}
-    >
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-0 md:p-4 overflow-auto">
       <div
-        style={{
-          background: "#fff",
-          padding: "2rem",
-          maxWidth: "500px",
-          width: "100%",
-          borderRadius: "8px",
-        }}
+        ref={modalRef}
+        className="bg-white w-full h-full md:max-w-[640px] md:max-h-[90vh] md:rounded-lg rounded-none shadow-xl overflow-hidden flex flex-col"
       >
-        <h2>{item.name}</h2>
-        <p>{item.description}</p>
-
-        {/* Sizes */}
-        {item.sizes && (
-          <div>
-            <h4>Size</h4>
-            {Object.keys(item.sizes).map((size) => (
-              <label key={size} style={{ marginRight: "10px" }}>
-                <input
-                  type="radio"
-                  name="size"
-                  value={size}
-                  checked={selectedSize === size}
-                  onChange={() => setSelectedSize(size)}
-                />
-                {size}” - £{formatPrice(item.sizes?.[size])}
-              </label>
-            ))}
-          </div>
-        )}
-
-        {/* Variations */}
-        {item.variation && Object.keys(item.variation).length > 0 && (
-          <div>
-            <h4>Variation</h4>
-            {Object.keys(item.variation).map((key) => (
-              <label key={key} style={{ marginRight: "10px" }}>
-                <input
-                  type="radio"
-                  name="variation"
-                  value={key}
-                  checked={selectedVariation === key}
-                  onChange={() => setSelectedVariation(key)}
-                />
-                {item.variation[key].name}
-                {selectedSize &&
-                  item.variation[key].prices[selectedSize] > 0 &&
-                  ` (+£${formatPrice(item.variation[key].prices?.[selectedSize])})`}
-              </label>
-            ))}
-          </div>
-        )}
-
-        {/* Addons */}
-        {item.addons && Object.keys(item.addons).length > 0 && (
-          <div>
-            <h4>Addons</h4>
-            {Object.keys(item.addons).map((addonName) => {
-              const addonData = item.addons[addonName];
-              let price;
-              if (typeof addonData === "object" && selectedSize) {
-                price = addonData[selectedSize] || 0;
-              } else {
-                price = addonData;
-              }
-
-              return (
-                <label key={addonName} style={{ display: "block" }}>
-                  <input
-                    type="checkbox"
-                    checked={selectedAddons.includes(addonName)}
-                    onChange={() => toggleAddon(addonName)}
-                  />
-                  {addonName} (+£{formatPrice(price)})
-                </label>
-              );
-            })}
-          </div>
-        )}
-
-        {/* Quantity */}
-        <div style={{ marginTop: "1rem" }}>
-          <label>
-            Quantity:
-            <input
-              type="number"
-              min="1"
-              value={quantity}
-              onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
-              style={{ width: "60px", marginLeft: "10px" }}
+        {/* Scrollable area */}
+        <div className="flex-1 overflow-y-auto">
+          {/* Hero Image */}
+          <div className="relative w-full h-72 md:h-96 overflow-hidden">
+            <Image
+              src={item.image_url || "/images/placeholder.jpg"}
+              alt={item.name}
+              fill
+              className="object-cover"
+              priority
             />
-          </label>
+          </div>
+
+          {/* Content */}
+          <div className="p-6">
+            <h1 className="text-xl font-bold text-gray-900">
+              {item.name}
+            </h1>
+
+            {item.price && (
+              <p className="mt-2 text-lg font-semibold text-gray-900">
+                £{Number(item.price).toFixed(2)}
+              </p>
+            )}
+
+            {item.description && (
+              <p className="mt-4 text-sm text-gray-700">
+                {item.description}
+              </p>
+            )}
+
+            {/* Quantity Controls */}
+            <div className="mt-6 flex justify-start">
+              <div className="flex items-center gap-2">
+                <Button
+                  size="icon"
+                  variant="outline"
+                  className="w-8 h-8 p-0 bg-gray-100 hover:bg-gray-200 text-gray-900 border border-gray-300"
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                >
+                  −
+                </Button>
+                <span className="text-base font-semibold w-6 text-center text-gray-900">
+                  {quantity}
+                </span>
+                <Button
+                  size="icon"
+                  variant="outline"
+                  className="w-8 h-8 p-0 bg-gray-100 hover:bg-gray-200 text-gray-900 border border-gray-300"
+                  onClick={() => setQuantity(quantity + 1)}
+                >
+                  +
+                </Button>
+              </div>
+            </div>
+
+            {/* Sizes */}
+            {item.sizes && (
+              <div className="mt-8">
+                <h4 className="text-sm font-semibold text-gray-700 mb-2">
+                  Choose Size
+                </h4>
+                <div className="divide-y divide-gray-200 border rounded">
+                  {Object.keys(item.sizes).map((size) => (
+                    <label
+                      key={size}
+                      className="flex justify-between items-center text-sm py-3 px-3 cursor-pointer hover:bg-gray-50 transition"
+                    >
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="radio"
+                          name="size"
+                          value={size}
+                          checked={selectedSize === size}
+                          onChange={() => setSelectedSize(size)}
+                          className="accent-red-600 w-5 h-5 border-gray-300 rounded"
+                        />
+                        <span className="text-gray-900">
+                          {size}”
+                        </span>
+                      </div>
+                      <span className="text-gray-500 text-sm">
+                        £{item.sizes?.[size].toFixed(2)}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Variations */}
+            {item.variation && Object.keys(item.variation).length > 0 && (
+              <div className="mt-8">
+                <h4 className="text-sm font-semibold text-gray-700 mb-2">
+                  Choose Variation
+                </h4>
+                <div className="divide-y divide-gray-200 border rounded">
+                  {Object.keys(item.variation).map((key) => {
+                    const variationData = item.variation[key];
+                    let price = 0;
+
+                    if (
+                      variationData?.prices &&
+                      selectedSize &&
+                      variationData.prices[selectedSize] !== undefined
+                    ) {
+                      price = variationData.prices[selectedSize];
+                    }
+
+                    return (
+                      <label
+                        key={key}
+                        className="flex justify-between items-center text-sm py-3 px-3 cursor-pointer hover:bg-gray-50 transition"
+                      >
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="radio"
+                            name="variation"
+                            value={key}
+                            checked={selectedVariation === key}
+                            onChange={() => setSelectedVariation(key)}
+                            className="accent-red-600 w-5 h-5 border-gray-300 rounded"
+                          />
+                          <span className="text-gray-900">
+                            {variationData.name}
+                          </span>
+                        </div>
+                        <span className="text-gray-500 text-sm">
+                          {price > 0 ? `+£${price.toFixed(2)}` : "+£0.00"}
+                        </span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Add-ons */}
+            {item.addons && Object.keys(item.addons).length > 0 && (
+              <div className="mt-8">
+                <h4 className="text-sm font-semibold text-gray-700 mb-2">
+                  Add-ons
+                </h4>
+                <div className="divide-y divide-gray-200 border rounded">
+                  {Object.keys(item.addons).map((addonName) => {
+                    const addonData = item.addons[addonName];
+                    let price;
+                    if (typeof addonData === "object" && selectedSize) {
+                      price = addonData[selectedSize] || 0;
+                    } else {
+                      price = addonData;
+                    }
+
+                    return (
+                      <label
+                        key={addonName}
+                        className="flex justify-between items-center text-sm py-3 px-3 cursor-pointer hover:bg-gray-50 transition"
+                      >
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="checkbox"
+                            checked={selectedAddons.includes(addonName)}
+                            onChange={() => toggleAddon(addonName)}
+                            className="accent-black w-5 h-5 border-gray-300 rounded"
+                          />
+                          <span className="text-gray-900">
+                            {addonName}
+                          </span>
+                        </div>
+                        <span className="text-gray-500 text-sm">
+                          +£{Number(price || 0).toFixed(2)}
+                        </span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
-        <h3>Total Price: £{calculatePrice()}</h3>
-
-        <button
-          onClick={() => {
-            addToCart({
-              id: item.id,
-              name: item.name,
-              price: item.price,
-              quantity,
-              selectedAddons,
-              selectedSize,
-              selectedVariation,
-              totalPrice: parseFloat(calculatePrice()) * quantity,
-            });
-            onClose();
-          }}
-          style={{
-            marginTop: "1rem",
-            padding: "0.5rem 1rem",
-            background: "green",
-            color: "#fff",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-          }}
-        >
-          Add to Cart
-        </button>
-
-        <button
-          onClick={onClose}
-          style={{
-            marginTop: "1rem",
-            marginLeft: "10px",
-            padding: "0.5rem 1rem",
-            background: "dodgerblue",
-            color: "#fff",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-          }}
-        >
-          Close
-        </button>
+        {/* Floating Footer */}
+        <div className="sticky bottom-0 w-full">
+          <div className="flex items-center justify-between bg-white/80 backdrop-blur border-t px-4 py-3">
+            <button
+              onClick={onClose}
+              className="text-red-600 hover:text-red-700 text-xl font-bold px-3 py-1 rounded-md bg-gray-100 hover:bg-gray-200 transition"
+            >
+              ×
+            </button>
+            <Button
+              onClick={handleAdd}
+              className="bg-red-600 hover:bg-red-700 text-white font-semibold flex-grow ml-4 py-3 rounded transition text-base"
+            >
+              Add to order £{totalPrice}
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

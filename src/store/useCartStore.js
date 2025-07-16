@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-
 export const useCartStore = create(
   persist(
     (set, get) => ({
@@ -34,6 +33,26 @@ export const useCartStore = create(
         set({
           cartItems: get().cartItems.filter((ci) => ci.id !== itemId),
         });
+      },
+      increaseQuantity: (itemId) => {
+        set((state) => ({
+          cartItems: state.cartItems.map((item) =>
+            item.id === itemId
+              ? { ...item, quantity: item.quantity + 1 }
+              : item
+          ),
+        }));
+      },
+      decreaseQuantity: (itemId) => {
+        set((state) => ({
+          cartItems: state.cartItems
+            .map((item) =>
+              item.id === itemId
+                ? { ...item, quantity: Math.max(1, item.quantity - 1) }
+                : item
+            )
+            .filter((item) => item.quantity > 0),
+        }));
       },
       clearCart: () => {
         set({ cartItems: [] });

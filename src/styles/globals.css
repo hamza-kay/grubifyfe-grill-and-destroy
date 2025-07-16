@@ -49,3 +49,9 @@ h1, h2, h3 {
   font-weight: 600;
   line-height: 1.2;
 }
+
+input:focus {
+  outline: none;
+  border-color: #d1d5db; /* Tailwind gray-300 */
+  box-shadow: 0 0 0 3px rgba(209, 213, 219, 0.5);
+}
