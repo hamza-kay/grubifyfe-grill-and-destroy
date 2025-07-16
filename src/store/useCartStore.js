@@ -5,6 +5,7 @@ export const useCartStore = create(
   persist(
     (set, get) => ({
       cartItems: [],
+
       addToCart: (item) => {
         const existing = get().cartItems.find(
           (ci) =>
@@ -29,11 +30,13 @@ export const useCartStore = create(
           });
         }
       },
+
       removeFromCart: (itemId) => {
         set({
           cartItems: get().cartItems.filter((ci) => ci.id !== itemId),
         });
       },
+
       increaseQuantity: (itemId) => {
         set((state) => ({
           cartItems: state.cartItems.map((item) =>
@@ -43,6 +46,7 @@ export const useCartStore = create(
           ),
         }));
       },
+
       decreaseQuantity: (itemId) => {
         set((state) => ({
           cartItems: state.cartItems
@@ -54,26 +58,24 @@ export const useCartStore = create(
             .filter((item) => item.quantity > 0),
         }));
       },
+
       clearCart: () => {
         set({ cartItems: [] });
       },
-      totalItems: () => {
-        return get().cartItems.reduce((total, item) => total + item.quantity, 0);
-      },
-      totalPrice: (pos) => {
-        return get().cartItems.reduce((total, item) => {
-          let price;
 
-          if (pos === "eposnow") {
-            price = item.price;
-          } else if (pos === "other") {
-            price = parseFloat(item.totalPrice || 0);
-          } else {
-            price = 0;
-          }
+      totalItems: () => {
+        return get().cartItems.reduce(
+          (total, item) => total + item.quantity,
+          0
+        );
+      },
+
+      totalPrice: () => {
+        return get().cartItems.reduce((total, item) => {
+          const basePrice = item.price || 0;
 
           const modifiersPrice = (item.selectedModifiers || []).reduce(
-            (sum, mod) => sum + (mod.modifierData?.priceMoney?.amount || 0),
+            (sum, mod) => sum + (mod.price || 0),
             0
           );
 
@@ -86,8 +88,11 @@ export const useCartStore = create(
           const variationPrice = item.selectedVariation?.price || 0;
 
           const itemTotal =
-            (price + modifiersPrice + addonsPrice + sizePrice + variationPrice) *
-            item.quantity;
+            (basePrice +
+              modifiersPrice +
+              addonsPrice +
+              sizePrice +
+              variationPrice) * item.quantity;
 
           return total + itemTotal;
         }, 0);

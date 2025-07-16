@@ -2,16 +2,22 @@
 
 import { useEffect, useState } from "react";
 import { useCartStore } from "@/store/useCartStore";
+import { useCheckoutStore } from "@/store/useCheckoutStore";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { X, Minus, Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useAppId } from "@/components/AppIdProvider";
 
 export default function OrderSummary() {
   const [isClient, setIsClient] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  const { appId, loading: appIdLoading } = useAppId();
 
   const cartItems = useCartStore((state) => state.cartItems);
   const totalPrice = useCartStore((state) => state.totalPrice("eposnow"));
@@ -19,7 +25,102 @@ export default function OrderSummary() {
   const decreaseQuantity = useCartStore((state) => state.decreaseQuantity);
   const removeFromCart = useCartStore((state) => state.removeFromCart);
 
-  if (!isClient) {
+  const customer = useCheckoutStore((state) => state.customer);
+
+  const handleCheckout = async () => {
+    if (!customer.fulfillmentType) {
+      console.error("Fulfillment type is missing");
+      return;
+    }
+
+
+
+    const fulfillments = [
+      {
+        uid: "59083446-6deb-409f-b6f6-3f504114462b",
+        type: customer.fulfillmentType?.toUpperCase(),
+        state: "PROPOSED",
+        location: "UK",
+        ...(customer.fulfillmentType === "DELIVERY"
+          ? {
+              deliveryDetails: {
+                appId,
+                recipient: {
+                  displayName: `${customer.firstName || ""} ${customer.lastName || ""}`,
+                  email_address: customer.email || "",
+                  phone_number: customer.phoneNumber || "",
+                  address_line_1: customer.deliveryAddress || "",
+                  postal_code: customer.postcode || "",
+                  country: "GB",
+                  locality: customer.city || "London",
+                },
+                scheduleType: "ASAP",
+                pickupAt: new Date().toISOString(),
+                note: customer.notes || "",
+                pos: "other",
+              },
+            }
+          : {
+              pickupDetails: {
+                appId,
+                recipient: {
+                  displayName: `${customer.firstName || ""} ${customer.lastName || ""}`,
+                },
+                scheduleType: "ASAP",
+                pickupAt: new Date().toISOString(),
+                note: customer.notes || "",
+                address: customer.deliveryAddress || "",
+                email: customer.email || "",
+                number: customer.phoneNumber || "",
+                pos: "other",
+              },
+            }),
+      },
+    ];
+
+    const updatedCart = {
+      cartItems,
+      fulfillments,
+    };
+
+
+
+    try {
+      const token = process.env.NEXT_PUBLIC_API_TOKEN;
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+      const response = await fetch(
+        `${baseUrl}/eposnow/create-payment-intent`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            "X-App-Id": appId,
+          },
+          body: JSON.stringify(updatedCart),
+        }
+      );
+
+      if (!response.ok) {
+        console.error("Backend error:", response.status, response.statusText);
+        return;
+      }
+
+      const data = await response.json();
+
+      if (!data.clientSecret) {
+        console.error("No clientSecret returned!");
+        return;
+      }
+
+      router.push(`/checkout?clientSecret=${data.clientSecret}`);
+    } catch (error) {
+      console.error("Stripe error:", error);
+    }
+  };
+
+  if (!isClient || appIdLoading) {
     return (
       <Card>
         <CardHeader>
@@ -112,10 +213,11 @@ export default function OrderSummary() {
             <span>£{(totalPrice + 1).toFixed(2)}</span>
           </div>
 
-          {/* Desktop button */}
           <Button
             size="lg"
             className="w-full bg-red-600 text-white hover:bg-red-700 hidden lg:block"
+            onClick={handleCheckout}
+            disabled={cartItems.length === 0}
           >
             Proceed to Payment
           </Button>
@@ -127,6 +229,8 @@ export default function OrderSummary() {
         <Button
           size="lg"
           className="w-full bg-red-600 text-white hover:bg-red-700"
+          onClick={handleCheckout}
+          disabled={cartItems.length === 0}
         >
           Proceed to Payment
         </Button>

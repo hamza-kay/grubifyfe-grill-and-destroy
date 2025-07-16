@@ -34,7 +34,7 @@ export function AppIdProvider({ children }) {
       }
 
       // Retry logic
-      if (retries < 5) {
+      if (retries < 1) {
         retries++;
         setTimeout(fetchHeader, 500);
       } else {
