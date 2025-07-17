@@ -10,6 +10,7 @@ import Image from "next/image";
 
 export default function Header({ sections, restaurant }) {
   const totalItems = useCartStore((state) => state.totalItems());
+  const totalPrice = useCartStore((state) => state.totalPrice("other")); 
   const [isHeroHidden, setIsHeroHidden] = useState(false);
 
   useEffect(() => {
@@ -55,8 +56,12 @@ export default function Header({ sections, restaurant }) {
           {totalItems > 0 && (
             <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
               {totalItems}
+              
             </span>
+            
+            
           )}
+          
         </Link>
       </div>
     </div>

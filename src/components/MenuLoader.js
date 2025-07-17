@@ -5,11 +5,15 @@ import { useAppId } from "@/components/AppIdProvider";
 import { fetchRestaurantData, fetchSectionItems } from "@/utils/api";
 import MenuItem from "@/components/MenuItem";
 import ItemModal from "@/components/ItemModal";
+import DealItemModal from "@/components/DealItemModal";
+
 import { useState } from "react";
 
 export default function MenuLoader({ sections }) {
   const { appId, loading } = useAppId();
   const [selectedItem, setSelectedItem] = useState(null);
+  const [isDealItem, setIsDealItem] = useState(false);
+  
 
   const {
     data: restaurantData,
@@ -89,7 +93,7 @@ return (
 <h3
   id={`section-${section.sectionId}`}
   data-section-id={section.sectionId}
-  className="text-xl font-semibold mt-8 mb-2  text-gray-800"
+  className="text-xl font-semibold mt-8 mb-2 "
 >
   {section.sectionTitle}
 </h3>
@@ -101,7 +105,20 @@ return (
             {section.items.map((item) => (
               <div
                 key={item.id}
-                onClick={() => setSelectedItem(item)}
+onClick={() => {
+  const isDeal =
+    item.isDeal === true ||
+    (Array.isArray(item.requirements) && item.requirements.length > 0);
+
+  console.log("Clicked item:", item);
+  console.log("→ isDeal:", isDeal);
+
+  setIsDealItem(isDeal);
+  setSelectedItem(item);
+}}
+
+
+
                 className="cursor-pointer"
               >
                 <MenuItem item={item} />
@@ -116,12 +133,23 @@ return (
       </div>
     ))}
 
-    {selectedItem && (
-      <ItemModal
-        item={selectedItem}
-        onClose={() => setSelectedItem(null)}
-      />
-    )}
+{selectedItem && (
+  isDealItem ? (
+    <DealItemModal
+      dealItem={selectedItem}
+      fullMenuItems={
+        allSectionItems.flatMap(section => section.items)
+      }
+      onClose={() => setSelectedItem(null)}
+    />
+  ) : (
+    <ItemModal
+      item={selectedItem}
+      onClose={() => setSelectedItem(null)}
+    />
+  )
+)}
+
   </main>
 );
 

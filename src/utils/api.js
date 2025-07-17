@@ -51,3 +51,4 @@ export async function fetchSectionItems(sectionId, appId) {
 
   return res.json();
 }
+

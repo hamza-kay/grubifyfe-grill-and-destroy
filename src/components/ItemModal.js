@@ -11,6 +11,8 @@ export default function ItemModal({ item, onClose }) {
   const [selectedAddons, setSelectedAddons] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const modalRef = useRef(null);
+  const [imgError, setImgError] = useState(false);
+
 
   const addToCart = useCartStore((state) => state.addToCart);
 
@@ -89,16 +91,18 @@ export default function ItemModal({ item, onClose }) {
   if (!item) return null;
 
   const handleAdd = () => {
-    addToCart({
-      id: item.id,
-      name: item.name,
-      price: item.price,
-      quantity,
-      selectedAddons,
-      selectedSize,
-      selectedVariation,
-      totalPrice: parseFloat(totalPrice) * quantity,
-    });
+const numericTotalPrice = parseFloat(totalPrice);
+
+addToCart({
+  id: item.id,
+  name: item.name,
+  price: numericTotalPrice,
+  quantity,
+  selectedAddons,
+  selectedSize,
+  selectedVariation,
+  totalPrice: numericTotalPrice * quantity,
+});
     onClose();
   };
 
@@ -111,15 +115,29 @@ export default function ItemModal({ item, onClose }) {
         {/* Scrollable area */}
         <div className="flex-1 overflow-y-auto">
           {/* Hero Image */}
-          <div className="relative w-full h-72 md:h-96 overflow-hidden">
-            <Image
-              src={item.image_url || "/images/placeholder.jpg"}
-              alt={item.name}
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
+  {/* Hero Image with Fallback */}
+<div className="relative w-full h-72 md:h-96 overflow-hidden bg-gray-100">
+  {(!item.image_url || imgError) ? (
+    <Image
+      src="https://cdn.grubify.co.uk/popularpizza/utensil.webp"
+      alt="Fallback image"
+      fill
+      className="object-contain p-6 grayscale opacity-50"
+      unoptimized
+      priority
+    />
+  ) : (
+    <Image
+      src={item.image_url}
+      alt={item.name}
+      fill
+      className="object-cover"
+      onError={() => setImgError(true)}
+      priority
+    />
+  )}
+</div>
+
 
           {/* Content */}
           <div className="p-6">

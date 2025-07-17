@@ -7,17 +7,43 @@ import {
   Elements,
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useSearchParams, useRouter } from "next/navigation";
 
 const stripePromise = loadStripe(
   "pk_live_51Q5F2DF4Au5KQjEAXJgOs1NLzN2omZSqhongqqLhkwCVi6zqK6BIIbEDfSORGPiFBaKPGJTkIEqJtYTbAwqvGHc4007YlbdokV"
 );
 
-function CheckoutForm() {
+export default function CheckoutPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const clientSecret = searchParams.get("clientSecret");
+  const amount = searchParams.get("amount");
+
+const appearance = {
+  theme: "stripe",
+  variables: {
+    fontFamily: "Geist, sans-serif",
+    borderRadius: "6px"
+  }
+};
+
+  if (!clientSecret) {
+    return <p className="p-4 text-red-600">No payment found.</p>;
+  }
+
+  return (
+    <Elements stripe={stripePromise} options={{ clientSecret, appearance }}>
+      <CheckoutForm amount={amount} router={router} />
+    </Elements>
+  );
+}
+
+function CheckoutForm({ amount, router }) {
   const stripe = useStripe();
   const elements = useElements();
-  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,37 +58,35 @@ function CheckoutForm() {
       redirect: "if_required",
     });
 
-    if (paymentIntent && paymentIntent.status === "succeeded") {
+    if (paymentIntent?.status === "succeeded") {
       router.push("/complete");
-    } else {
+    } else if (error) {
       console.error(error);
+      alert(error.message);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <PaymentElement />
-      <button
-        type="submit"
-        style={{ marginTop: "1rem", padding: "0.5rem 1rem" }}
-      >
-        Pay Now
-      </button>
-    </form>
-  );
-}
+    <Card className="max-w-md mx-auto mt-10 border border-gray-200 shadow-none rounded">
+      <CardHeader>
+       <CardTitle className="text-base font-semibold text-gray-900 text-center">
+  Stripe Secure Checkout
+</CardTitle>
+      </CardHeader>
+<CardContent>
 
-export default function CheckoutPage() {
-  const searchParams = useSearchParams();
-  const clientSecret = searchParams.get("clientSecret");
+  <form onSubmit={handleSubmit} className="space-y-4">
+    <PaymentElement />
+    <Button
+      type="submit"
+      variant="outline"
+      className="w-full text-gray-800 border-gray-300 hover:bg-gray-50"
+    >
+      Pay £{(amount / 100).toFixed(2)}
+    </Button>
+  </form>
+</CardContent>
 
-  if (!clientSecret) {
-    return <p>No payment found.</p>;
-  }
-
-  return (
-    <Elements stripe={stripePromise} options={{ clientSecret }}>
-      <CheckoutForm />
-    </Elements>
+    </Card>
   );
 }

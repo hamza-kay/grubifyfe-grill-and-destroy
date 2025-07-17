@@ -37,6 +37,17 @@ export const useCartStore = create(
         });
       },
 
+removeDealFromCart: (dealGroupId) => {
+  set({
+    cartItems: get().cartItems.filter(
+      (item) => item.parentDealId !== dealGroupId && item.id !== dealGroupId
+    ),
+  });
+},
+
+
+
+
       increaseQuantity: (itemId) => {
         set((state) => ({
           cartItems: state.cartItems.map((item) =>

@@ -24,6 +24,7 @@ export default function OrderSummary() {
   const increaseQuantity = useCartStore((state) => state.increaseQuantity);
   const decreaseQuantity = useCartStore((state) => state.decreaseQuantity);
   const removeFromCart = useCartStore((state) => state.removeFromCart);
+  const removeDealFromCart = useCartStore((state) => state.removeDealFromCart);
 
   const customer = useCheckoutStore((state) => state.customer);
 
@@ -32,8 +33,6 @@ export default function OrderSummary() {
       console.error("Fulfillment type is missing");
       return;
     }
-
-
 
     const fulfillments = [
       {
@@ -83,8 +82,6 @@ export default function OrderSummary() {
       fulfillments,
     };
 
-
-
     try {
       const token = process.env.NEXT_PUBLIC_API_TOKEN;
       const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -114,7 +111,7 @@ export default function OrderSummary() {
         return;
       }
 
-      router.push(`/checkout?clientSecret=${data.clientSecret}`);
+      router.push(`/checkout?clientSecret=${data.clientSecret}&amount=${data.amount}&currency=${data.currency}`);
     } catch (error) {
       console.error("Stripe error:", error);
     }
@@ -133,6 +130,13 @@ export default function OrderSummary() {
     );
   }
 
+  const grouped = {};
+  cartItems.forEach((item) => {
+    const groupKey = item.parentDealId || item.id;
+    if (!grouped[groupKey]) grouped[groupKey] = [];
+    grouped[groupKey].push(item);
+  });
+
   return (
     <>
       <Card>
@@ -141,48 +145,91 @@ export default function OrderSummary() {
         </CardHeader>
         <CardContent className="space-y-6">
           {cartItems.length > 0 ? (
-            cartItems.map((item) => (
-              <div
-                key={item.id}
-                className="flex justify-between items-center border-b border-gray-200 pb-4 last:border-none"
-              >
-                <div className="flex-1">
-                  <p className="font-medium text-gray-900">{item.name}</p>
+            Object.entries(grouped).map(([groupKey, items]) => {
+              const deal = items.find((i) => i.isDeal);
+              const children = items.filter((i) => !i.isDeal);
 
-                  <div className="mt-2 flex items-center gap-2">
-                    <button
-                      className="w-7 h-7 border border-red-600 text-red-600 bg-white hover:bg-red-50 rounded flex items-center justify-center transition-colors"
-                      onClick={() => decreaseQuantity(item.id)}
-                    >
-                      <Minus className="w-3 h-3" />
-                    </button>
+              if (deal) {
+                return (
+                  <div key={groupKey} className="border-b border-gray-300 pb-4">
+                    <div className="flex justify-between items-center">
+                      <p className="font-medium text-gray-900">{deal.name}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-red-600 font-semibold text-sm">
+                          £{(deal.price * deal.quantity).toFixed(2)}
+                        </p>
+    <button
+  onClick={() => removeDealFromCart(groupKey)}
+  className="text-gray-400 hover:text-red-600 transition"
+>
+  <X className="w-4 h-4" />
+</button>
 
-                    <span className="text-sm w-6 text-center text-gray-900 font-semibold">
-                      {item.quantity}
-                    </span>
-
-                    <button
-                      className="w-7 h-7 border border-red-600 text-red-600 bg-white hover:bg-red-50 rounded flex items-center justify-center transition-colors"
-                      onClick={() => increaseQuantity(item.id)}
-                    >
-                      <Plus className="w-3 h-3" />
-                    </button>
+                      </div>
+                    </div>
+                    <ul className="mt-2 space-y-1 ml-4 text-sm text-gray-700">
+                      {children.map((child, index) => (
+                        <li key={index}>
+                          {child.name}
+                          {child.variationName && ` - ${child.variationName}`}
+                          {child.selectedSize && ` (${typeof child.selectedSize === 'string' ? child.selectedSize : `${child.selectedSize}"`})`}
+                          {Array.isArray(child.selectedAddons) && child.selectedAddons.length > 0 && (
+                            <> - {child.selectedAddons.join(", ")}</>
+                          )}
+                          {" "}- £{(child.price * child.quantity).toFixed(2)}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                </div>
-
-                <div className="flex items-center gap-4">
-                  <p className="text-red-600 font-semibold text-sm">
-                    £{(item.price * item.quantity).toFixed(2)}
-                  </p>
-                  <button
-                    onClick={() => removeFromCart(item.id)}
-                    className="text-gray-400 hover:text-red-600 transition"
+                );
+              } else {
+                return items.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex justify-between items-start border-b border-gray-200 pb-4 last:border-none"
                   >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            ))
+                    <div className="flex-1">
+                      <p className="font-medium text-gray-900">{item.name}</p>
+                      <ul className="mt-1 text-sm text-gray-700 space-y-1">
+                        {item.selectedSize && <li>Size: {typeof item.selectedSize === 'string' ? item.selectedSize : `${item.selectedSize}"`}</li>}
+                        {item.variationName && <li>Variation: {item.variationName}</li>}
+                        {Array.isArray(item.selectedAddons) && item.selectedAddons.length > 0 && (
+                          <li>Add-ons: {item.selectedAddons.join(", ")}</li>
+                        )}
+                      </ul>
+                      <div className="mt-2 flex items-center gap-2">
+                        <button
+                          className="w-7 h-7 border border-red-600 text-red-600 bg-white hover:bg-red-50 rounded flex items-center justify-center transition-colors"
+                          onClick={() => decreaseQuantity(item.id)}
+                        >
+                          <Minus className="w-3 h-3" />
+                        </button>
+                        <span className="text-sm w-6 text-center text-gray-900 font-semibold">
+                          {item.quantity}
+                        </span>
+                        <button
+                          className="w-7 h-7 border border-red-600 text-red-600 bg-white hover:bg-red-50 rounded flex items-center justify-center transition-colors"
+                          onClick={() => increaseQuantity(item.id)}
+                        >
+                          <Plus className="w-3 h-3" />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4 pt-1">
+                      <p className="text-red-600 font-semibold text-sm">
+                        £{(item.price * item.quantity).toFixed(2)}
+                      </p>
+                      <button
+                        onClick={() => removeFromCart(item.id)}
+                        className="text-gray-400 hover:text-red-600 transition"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                ));
+              }
+            })
           ) : (
             <p className="text-gray-500">Your cart is empty.</p>
           )}
@@ -224,7 +271,6 @@ export default function OrderSummary() {
         </CardContent>
       </Card>
 
-      {/* Sticky Mobile Footer */}
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 shadow-md lg:hidden">
         <Button
           size="lg"
