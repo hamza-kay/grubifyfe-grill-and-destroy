@@ -192,7 +192,8 @@ const handleAddToCart = () => {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-0 md:p-4 overflow-auto">
       <div
         ref={modalRef}
-        className="bg-white w-full h-full md:max-w-[640px] md:max-h-[90vh] md:rounded-lg rounded-none shadow-xl overflow-hidden flex flex-col"
+        className="bg-white w-full h-full md:h-auto md:max-w-[640px] md:max-h-[90vh] md:rounded-lg rounded-none shadow-xl overflow-hidden flex flex-col"
+
       >
         <div className="flex-1 overflow-y-auto">
       <div className="relative w-full h-72 md:h-96 overflow-hidden bg-gray-100">

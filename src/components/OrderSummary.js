@@ -20,7 +20,8 @@ export default function OrderSummary() {
   const { appId, loading: appIdLoading } = useAppId();
 
   const cartItems = useCartStore((state) => state.cartItems);
-  const totalPrice = useCartStore((state) => state.totalPrice("eposnow"));
+  const totalPrice = useCartStore((state) => state.totalPrice("other"));
+  const serviceFee = parseFloat((totalPrice * 0.05).toFixed(2));
   const increaseQuantity = useCartStore((state) => state.increaseQuantity);
   const decreaseQuantity = useCartStore((state) => state.decreaseQuantity);
   const removeFromCart = useCartStore((state) => state.removeFromCart);
@@ -241,10 +242,11 @@ export default function OrderSummary() {
             <span className="font-medium">£{totalPrice.toFixed(2)}</span>
           </div>
 
-          <div className="flex justify-between">
-            <span className="text-gray-600">Service Fee</span>
-            <span className="font-medium">£1.00</span>
-          </div>
+         <div className="flex justify-between">
+  <span className="text-gray-600">Service Fee</span>
+  <span className="font-medium">£{serviceFee.toFixed(2)}</span>
+</div>
+
 
           <div className="flex justify-between">
             <span className="text-gray-600">Delivery Fee</span>
@@ -255,10 +257,11 @@ export default function OrderSummary() {
 
           <hr className="my-4" />
 
-          <div className="flex justify-between text-lg font-bold">
-            <span>Total</span>
-            <span>£{(totalPrice + 1).toFixed(2)}</span>
-          </div>
+     <div className="flex justify-between text-lg font-bold">
+  <span>Total</span>
+  <span>£{(totalPrice + serviceFee).toFixed(2)}</span>
+</div>
+
 
           <Button
             size="lg"
