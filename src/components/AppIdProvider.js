@@ -7,6 +7,8 @@ const AppIdContext = createContext(null);
 export function AppIdProvider({ children }) {
   const [appId, setAppId] = useState(null);
   const [loading, setLoading] = useState(true);
+  const devAppId = process.env.NEXT_PUBLIC_DEV_APP_ID;
+  
 
   useEffect(() => {
     let retries = 3;
@@ -41,8 +43,6 @@ export function AppIdProvider({ children }) {
         console.error("Max retries reached. Using fallback appId in dev.");
         // Use fallback only in development
         if (process.env.NODE_ENV === "development") {
-          const devAppId =
-            "aXrbtQ3AXaSFWyWt:jQ==:VS5GLVMVDg2muDpEPIAiJQ=="; // your real dev App ID
           console.log("Using fallback dev appId:", devAppId);
           setAppId(devAppId);
         }

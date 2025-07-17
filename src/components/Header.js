@@ -35,7 +35,7 @@ export default function Header({ sections, restaurant }) {
       <Link href="/" className="flex items-center gap-3">
         <Image
           src="https://api.ramtd.net/images/sites/90/logo.png"
-          alt={restaurant?.title || "Popular Pizza"}
+          alt={restaurant?.title || ""}
           width={160}
           height={50}
           className="h-[50px] w-auto object-contain"
