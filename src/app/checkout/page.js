@@ -11,9 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useSearchParams, useRouter } from "next/navigation";
 
-const stripePromise = loadStripe(
-  "pk_live_51Q5F2DF4Au5KQjEAXJgOs1NLzN2omZSqhongqqLhkwCVi6zqK6BIIbEDfSORGPiFBaKPGJTkIEqJtYTbAwqvGHc4007YlbdokV"
-);
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
 export default function CheckoutPage() {
   const searchParams = useSearchParams();

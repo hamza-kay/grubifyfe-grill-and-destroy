@@ -9,7 +9,7 @@ export function AppIdProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let retries = 0;
+    let retries = 3;
 
     const fetchHeader = async () => {
       try {
@@ -19,7 +19,7 @@ export function AppIdProvider({ children }) {
         if (response.ok) {
           const header = response.headers.get("x-app-id");
           if (header) {
-            console.log("Fetched dynamic appId:", header);
+            // console.log("Fetched dynamic appId:", header);
             setAppId(header);
             setLoading(false);
             return;
