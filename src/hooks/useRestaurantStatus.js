@@ -29,7 +29,7 @@ export function useRestaurantStatus(appId, token) {
 
     const interval = setInterval(fetchRestaurantStatus, 10000); // Poll every 10s
     return () => clearInterval(interval); // Cleanup on unmount
-  }, [appId, token]);
+  }, [appId, token, baseUrl]);
 
   return isRestaurantOpen;
 }

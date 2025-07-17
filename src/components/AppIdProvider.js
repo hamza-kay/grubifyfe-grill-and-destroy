@@ -10,48 +10,46 @@ export function AppIdProvider({ children }) {
   const devAppId = process.env.NEXT_PUBLIC_DEV_APP_ID;
   
 
-  useEffect(() => {
-    let retries = 3;
+useEffect(() => {
+  const maxRetries = 3;
 
-    const fetchHeader = async () => {
-      try {
-        const response = await fetch(window.location.origin, {
-          cache: "no-store",
-        });
-        if (response.ok) {
-          const header = response.headers.get("x-app-id");
-          if (header) {
-            // console.log("Fetched dynamic appId:", header);
-            setAppId(header);
-            setLoading(false);
-            return;
-          } else {
-            console.warn("x-app-id header not found. Retrying...");
-          }
+  const fetchHeader = async (attempt = 1) => {
+    try {
+      const response = await fetch(window.location.origin, {
+        cache: "no-store",
+      });
+
+      if (response.ok) {
+        const header = response.headers.get("x-app-id");
+        if (header) {
+          setAppId(header);
+          setLoading(false);
+          return;
         } else {
-          console.error("Failed to fetch app ID.");
+          console.warn("x-app-id header not found. Retrying...");
         }
-      } catch (e) {
-        console.error("Error fetching app ID:", e);
-      }
-
-      // Retry logic
-      if (retries < 1) {
-        retries++;
-        setTimeout(fetchHeader, 500);
       } else {
-        console.error("Max retries reached. Using fallback appId in dev.");
-        // Use fallback only in development
-        if (process.env.NODE_ENV === "development") {
-          console.log("Using fallback dev appId:", devAppId);
-          setAppId(devAppId);
-        }
-        setLoading(false);
+        console.error("Failed to fetch app ID.");
       }
-    };
+    } catch (e) {
+      console.error("Error fetching app ID:", e);
+    }
 
-    fetchHeader();
-  }, []);
+    if (attempt < maxRetries) {
+      setTimeout(() => fetchHeader(attempt + 1), 500);
+    } else {
+      console.error("Max retries reached. Using fallback appId in dev.");
+      if (process.env.NODE_ENV === "development") {
+        console.log("Using fallback dev appId:", devAppId);
+        setAppId(devAppId);
+      }
+      setLoading(false);
+    }
+  };
+
+  fetchHeader();
+}, [devAppId]);
+
 
   return (
     <AppIdContext.Provider value={{ appId, loading }}>
