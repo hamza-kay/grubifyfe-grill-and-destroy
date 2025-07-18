@@ -21,6 +21,7 @@ useEffect(() => {
 
       if (response.ok) {
         const header = response.headers.get("x-app-id");
+        console.log('header >>>>>' . header);
         if (header) {
           setAppId(header);
           setLoading(false);
