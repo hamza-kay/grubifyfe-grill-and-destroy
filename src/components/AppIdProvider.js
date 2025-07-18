@@ -18,7 +18,7 @@ useEffect(() => {
       const response = await fetch(window.location.origin, {
         cache: "no-store",
       });
-console.log('header >>>>>' . header);
+console.log('response >>>>>' . response);
       if (response.ok) {
         const header = response.headers.get("x-app-id");
         
