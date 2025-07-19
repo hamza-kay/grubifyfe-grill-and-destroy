@@ -8,34 +8,44 @@ export function AppIdProvider({ children }) {
   const [appId, setAppId] = useState(null);
   const [loading, setLoading] = useState(true);
   const devAppId = process.env.NEXT_PUBLIC_DEV_APP_ID;
-  
 
-useEffect(() => {
-  const fetchAppId = async () => {
-    try {
-      const res = await fetch("/", {
-        method: "GET",
-        cache: "no-store", // ensure fresh request
-      });
+  useEffect(() => {
+    const maxRetries = 3;
 
-      const appId = res.headers.get("x-app-id");
+    const fetchAppId = async (attempt = 1) => {
+      try {
+        const response = await fetch("/favicon.ico", {
+          method: "GET",
+          cache: "no-store",
+        });
 
-      if (appId) {
-        setAppId(appId);
-      } else {
-        console.warn("x-app-id not found in root response.");
+        const header = response.headers.get("x-app-id");
+
+        if (header) {
+          setAppId(header);
+          setLoading(false);
+          return;
+        } else {
+          console.warn("⚠️ x-app-id header not found. Retrying...");
+        }
+      } catch (e) {
+        console.error("❌ Error fetching x-app-id:", e);
       }
-    } catch (error) {
-      console.error("Failed to fetch x-app-id:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  fetchAppId();
-}, []);
+      if (attempt < maxRetries) {
+        setTimeout(() => fetchAppId(attempt + 1), 500);
+      } else {
+        console.error("❌ Max retries reached. Using fallback appId in dev.");
+        if (process.env.NODE_ENV === "development") {
+          console.log("✅ Using fallback dev appId:", devAppId);
+          setAppId(devAppId);
+        }
+        setLoading(false);
+      }
+    };
 
-
+    fetchAppId();
+  }, [devAppId]);
 
   return (
     <AppIdContext.Provider value={{ appId, loading }}>
