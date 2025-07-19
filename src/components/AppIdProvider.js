@@ -15,8 +15,8 @@ useEffect(() => {
 
   const fetchHeader = async (attempt = 1) => {
     try {
-      const response = await fetch(window.location.origin, {
-        cache: "no-store",
+      const response = await fetch('/_next/static/chunks/main-app.js', {
+        cache: 'no-store',
       });
 console.log('response >>>>>' . response);
       if (response.ok) {
