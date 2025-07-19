@@ -11,45 +11,30 @@ export function AppIdProvider({ children }) {
   
 
 useEffect(() => {
-  const maxRetries = 3;
-
-  const fetchHeader = async (attempt = 1) => {
+  const fetchAppId = async () => {
     try {
-      const response = await fetch('/_next/static/chunks/main-app.js', {
-        cache: 'no-store',
+      const res = await fetch("/", {
+        method: "GET",
+        cache: "no-store", // ensure fresh request
       });
-console.log('response >>>>>' . response);
-      if (response.ok) {
-        const header = response.headers.get("x-app-id");
-        
-        if (header) {
-          setAppId(header);
-          setLoading(false);
-          return;
-        } else {
-          console.warn("x-app-id header not found. Retrying...");
-        }
-      } else {
-        console.error("Failed to fetch app ID.");
-      }
-    } catch (e) {
-      console.error("Error fetching app ID:", e);
-    }
 
-    if (attempt < maxRetries) {
-      setTimeout(() => fetchHeader(attempt + 1), 500);
-    } else {
-      console.error("Max retries reached. Using fallback appId in dev.");
-      if (process.env.NODE_ENV === "development") {
-        console.log("Using fallback dev appId:", devAppId);
-        setAppId(devAppId);
+      const appId = res.headers.get("x-app-id");
+
+      if (appId) {
+        setAppId(appId);
+      } else {
+        console.warn("x-app-id not found in root response.");
       }
+    } catch (error) {
+      console.error("Failed to fetch x-app-id:", error);
+    } finally {
       setLoading(false);
     }
   };
 
-  fetchHeader();
-}, [devAppId]);
+  fetchAppId();
+}, []);
+
 
 
   return (
