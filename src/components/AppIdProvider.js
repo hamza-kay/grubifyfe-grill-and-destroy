@@ -19,6 +19,8 @@ export function AppIdProvider({ children }) {
           cache: "no-store",
         });
 
+        console.log(response)
+
         const header = response.headers.get("x-app-id");
 
         if (header) {
