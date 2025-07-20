@@ -10,49 +10,44 @@ export function AppIdProvider({ children }) {
   const devAppId = process.env.NEXT_PUBLIC_DEV_APP_ID;
 
   useEffect(() => {
-    const maxRetries = 3;
+    if (process.env.NODE_ENV === "development") {
+      const fallback = "aXrbtQ3AXaSFWyWt:jQ==:VS5GLVMVDg2muDpEPIAiJQ==";
+      console.log("⏳ Using hardcoded appId in dev after delay...");
+      
+      // Add a 100ms delay before setting the appId
+      setTimeout(() => {
+        setAppId(fallback);
+        setLoading(false);
+        console.log("✅ Hardcoded appId set:", fallback);
+      }, 100);
 
-    const fetchAppId = async (attempt = 1) => {
+      return;
+    }
+
+    // If needed, keep this for production
+    const fetchAppId = async () => {
       try {
         const response = await fetch("/favicon.ico", {
           method: "GET",
           cache: "no-store",
         });
 
-        console.log("📥 Favicon response:", response);
-
-        const header = response.headers.get("X-App-Id");
-        console.log("🔍 Extracted X-App-Id:", header);
+        const header = response.headers.get("x-app-id");
 
         if (header) {
-          // ✅ Add slight delay before setting appId
-          setTimeout(() => {
-            setAppId(header);
-            setLoading(false);
-            console.log("✅ AppId set (delayed):", header);
-          }, 100); // 100ms delay
-          return;
+          setAppId(header);
         } else {
-          console.warn("⚠️ x-app-id header not found. Retrying...");
+          console.warn("⚠️ x-app-id header not found.");
         }
       } catch (e) {
         console.error("❌ Error fetching x-app-id:", e);
-      }
-
-      if (attempt < maxRetries) {
-        setTimeout(() => fetchAppId(attempt + 1), 500);
-      } else {
-        console.error("❌ Max retries reached. Using fallback appId in dev.");
-        if (process.env.NODE_ENV === "development") {
-          console.log("✅ Using fallback dev appId:", devAppId);
-          setAppId(devAppId);
-        }
+      } finally {
         setLoading(false);
       }
     };
 
     fetchAppId();
-  }, [devAppId]);
+  }, []);
 
   return (
     <AppIdContext.Provider value={{ appId, loading }}>
