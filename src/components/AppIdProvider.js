@@ -9,43 +9,36 @@ export function AppIdProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let retries = 3;
+    const devAppId = "aXrbtQ3AXaSFWyWt:jQ==:VS5GLVMVDg2muDpEPIAiJQ=="; // fallback dev App ID
+    let retries = 0;
+    const maxRetries = 3;
 
     const fetchHeader = async () => {
       try {
         const response = await fetch(window.location.origin, {
           cache: "no-store",
         });
-        if (response.ok) {
-          const header = response.headers.get("x-app-id");
-          if (header) {
-            console.log("Fetched dynamic appId:", header);
-            setAppId(header);
-            setLoading(false);
-            return;
-          } else {
-            console.warn("x-app-id header not found. Retrying...");
-          }
-        } else {
-          console.error("Failed to fetch app ID.");
+
+        const header = response.headers.get("x-app-id");
+
+        if (response.ok && header) {
+          console.log("✅ Fetched dynamic appId:", header);
+          setAppId(header);
+          setLoading(false);
+          return;
         }
-      } catch (e) {
-        console.error("Error fetching app ID:", e);
+
+        console.warn("⚠️ x-app-id not found in headers. Retrying...");
+      } catch (err) {
+        console.error("❌ Error fetching appId:", err);
       }
 
-      // Retry logic
-      if (retries < 5) {
+      if (retries < maxRetries) {
         retries++;
         setTimeout(fetchHeader, 500);
       } else {
-        console.error("Max retries reached. Using fallback appId in dev.");
-        // Use fallback only in development
-        if (!header) {
-          const devAppId =
-            "aXrbtQ3AXaSFWyWt:jQ==:VS5GLVMVDg2muDpEPIAiJQ=="; // your real dev App ID
-          console.log("Using fallback dev appId:", devAppId);
-          setAppId(devAppId);
-        }
+        console.warn("⏱️ Max retries reached. Falling back to devAppId.");
+        setAppId(devAppId);
         setLoading(false);
       }
     };
