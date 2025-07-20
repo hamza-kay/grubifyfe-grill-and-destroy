@@ -21,7 +21,9 @@ export function AppIdProvider({ children }) {
 
         console.log(response)
 
-        const header = response.headers.get("x-app-id");
+        const header = response.headers.get("X-App-Id");
+
+          console.log(header)
 
         if (header) {
           setAppId(header);
