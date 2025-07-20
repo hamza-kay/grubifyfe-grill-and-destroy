@@ -19,15 +19,18 @@ export function AppIdProvider({ children }) {
           cache: "no-store",
         });
 
-        console.log(response)
+        console.log("📥 Favicon response:", response);
 
         const header = response.headers.get("X-App-Id");
-
-          console.log(header)
+        console.log("🔍 Extracted X-App-Id:", header);
 
         if (header) {
-          setAppId(header);
-          setLoading(false);
+          // ✅ Add slight delay before setting appId
+          setTimeout(() => {
+            setAppId(header);
+            setLoading(false);
+            console.log("✅ AppId set (delayed):", header);
+          }, 100); // 100ms delay
           return;
         } else {
           console.warn("⚠️ x-app-id header not found. Retrying...");
