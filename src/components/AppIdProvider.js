@@ -7,46 +7,50 @@ const AppIdContext = createContext(null);
 export function AppIdProvider({ children }) {
   const [appId, setAppId] = useState(null);
   const [loading, setLoading] = useState(true);
-  const devAppId = process.env.NEXT_PUBLIC_DEV_APP_ID;
 
   useEffect(() => {
-    if (process.env.NODE_ENV === "development") {
-      const fallback = "aXrbtQ3AXaSFWyWt:jQ==:VS5GLVMVDg2muDpEPIAiJQ==";
-      console.log("⏳ Using hardcoded appId in dev after delay...");
-      
-      // Add a 100ms delay before setting the appId
-      setTimeout(() => {
-        setAppId(fallback);
-        setLoading(false);
-        console.log("✅ Hardcoded appId set:", fallback);
-      }, 100);
+    let retries = 3;
 
-      return;
-    }
-
-    // If needed, keep this for production
-    const fetchAppId = async () => {
+    const fetchHeader = async () => {
       try {
-        const response = await fetch("/favicon.ico", {
-          method: "GET",
+        const response = await fetch(window.location.origin, {
           cache: "no-store",
         });
-
-        const header = response.headers.get("x-app-id");
-
-        if (header) {
-          setAppId(header);
+        if (response.ok) {
+          const header = response.headers.get("x-app-id");
+          if (header) {
+            console.log("Fetched dynamic appId:", header);
+            setAppId(header);
+            setLoading(false);
+            return;
+          } else {
+            console.warn("x-app-id header not found. Retrying...");
+          }
         } else {
-          console.warn("⚠️ x-app-id header not found.");
+          console.error("Failed to fetch app ID.");
         }
       } catch (e) {
-        console.error("❌ Error fetching x-app-id:", e);
-      } finally {
+        console.error("Error fetching app ID:", e);
+      }
+
+      // Retry logic
+      if (retries < 5) {
+        retries++;
+        setTimeout(fetchHeader, 500);
+      } else {
+        console.error("Max retries reached. Using fallback appId in dev.");
+        // Use fallback only in development
+        if (!header) {
+          const devAppId =
+            "aXrbtQ3AXaSFWyWt:jQ==:VS5GLVMVDg2muDpEPIAiJQ=="; // your real dev App ID
+          console.log("Using fallback dev appId:", devAppId);
+          setAppId(devAppId);
+        }
         setLoading(false);
       }
     };
 
-    fetchAppId();
+    fetchHeader();
   }, []);
 
   return (
