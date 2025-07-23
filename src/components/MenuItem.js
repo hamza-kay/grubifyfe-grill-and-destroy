@@ -24,6 +24,7 @@ export default function MenuItem({ item, onClick }) {
             fill
             className="object-contain p-6 grayscale opacity-50"
             unoptimized
+             sizes="(max-width: 768px) 100vw, 50vw"
           />
         )}
 
@@ -33,6 +34,7 @@ export default function MenuItem({ item, onClick }) {
             src={item.image_url}
             alt={item.name}
             fill
+             sizes="(max-width: 768px) 100vw, 50vw"
             className="object-cover"
             onError={() => setImgError(true)}
           />

@@ -23,7 +23,7 @@ export default function CheckoutPage() {
 const appearance = {
   theme: "stripe",
   variables: {
-    fontFamily: "Geist, sans-serif",
+    fontFamily: "Inter, sans-serif",
     borderRadius: "6px"
   }
 };

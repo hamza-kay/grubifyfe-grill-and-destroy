@@ -52,7 +52,8 @@ export default function MenuLoader({ sections }) {
     return (
      <main className="max-w-7xl mx-auto px-4 pt-0 pb-6">
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+       <div className="grid w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
           {Array.from({ length: 6 }).map((_, idx) => (
             <div
               key={idx}
@@ -84,19 +85,19 @@ export default function MenuLoader({ sections }) {
   }
 
 return (
-  <main className="max-w-7xl mx-auto px-4 pt-0 pb-6">
+ <main className="max-w-7xl mx-auto px-4 pt-0 pb-6">
     {allSectionItems.map((section) => (
       <div
         key={section.sectionId}
         className="mb-6"
       >
-<h3
+<h2
   id={`section-${section.sectionId}`}
   data-section-id={section.sectionId}
-  className="text-xl font-semibold mt-8 mb-2 "
+  className="text-3xl font-bold text-gray-900 mb-8"
 >
   {section.sectionTitle}
-</h3>
+</h2>
 
 
 

@@ -39,79 +39,78 @@ export default function AlertsHeader({ restaurant }) {
   const isRestaurantOpen = isRestaurantCurrentlyOpen(restaurant);
   const todayHours = getTodayHours(restaurant.opening_hours);
 
-  return (
-    <div className="w-full border-b border-gray-200 bg-white shadow-sm">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-6 px-4 py-4">
-        <div className="flex-shrink-0 w-full md:w-64 h-40 relative rounded overflow-hidden">
-          <Image
-            src={restaurant.image || "/images/placeholder.jpg"}
-            alt={restaurant.title}
-            fill
-            className="object-cover scale-[1.35]"
-          />
+return (
+<div className="w-full bg-gray-50 py-8">
+  <div className="max-w-7xl mx-auto sm:px-4">
+
+    <div className="bg-white shadow-lg rounded-lg overflow-hidden md:flex">
+
+
+
+      {/* Left Image */}
+      <div className="md:flex-shrink-0 w-full md:w-64 h-64 relative">
+        <Image
+          src={restaurant.image || "/images/placeholder.jpg"}
+          alt={restaurant.title}
+          fill
+          className="object-cover"
+          priority
+        />
+      </div>
+
+      {/* Right Content */}
+      <div className="p-8">
+        <div className="uppercase tracking-wide text-sm text-red-600 font-semibold">
+          {restaurant.title}
         </div>
 
-        <div className="flex flex-col justify-center flex-1 space-y-2">
-          <h1 className="text-3xl font-extrabold tracking-tight text-gray-900">
-            {restaurant.title}
-          </h1>
-
-          <p
-            className={`text-xs uppercase tracking-wide font-semibold ${
-              isRestaurantOpen ? "text-green-600" : "text-red-600"
+        <div className="mt-2 flex items-center gap-2">
+          <span
+            className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${
+              isRestaurantOpen
+                ? "bg-green-100 text-green-800"
+                : "bg-red-100 text-red-800"
             }`}
           >
+            {isRestaurantOpen ? "OPEN" : "CLOSED"}
+          </span>
+          <span className="text-gray-500 text-sm">
             {isRestaurantOpen
-              ? `Open until ${todayHours?.CloseTime?.slice(0, 5)}`
-              : `Closed — opens at ${todayHours?.OpenTime?.slice(0, 5)}`}
-          </p>
+              ? `Until ${todayHours?.CloseTime?.slice(0, 5)}`
+              : `Opens at ${todayHours?.OpenTime?.slice(0, 5)}`}
+          </span>
+        </div>
 
-          {restaurant.description && (
-            <p className="text-sm text-gray-700 font-medium">
-              {restaurant.description}
-            </p>
+        <p className="mt-4 text-gray-600 text-sm font-medium">
+          {restaurant.address}
+        </p>
+
+        <div className="mt-4 space-y-3 text-sm text-gray-600">
+          {restaurant.phone && (
+            <div className="flex items-center gap-3">
+              <FaPhone className="w-4 h-4" />
+              <span>{restaurant.phone}</span>
+            </div>
           )}
 
-          {restaurant.address && (
-            <p className="text-sm text-gray-700 font-medium">
-              {restaurant.address}
-            </p>
+          {restaurant.socials?.instagram && (
+            <div className="flex items-center gap-3">
+              <FaInstagram className="w-4 h-4" />
+              <span>{restaurant.socials.instagram}</span>
+            </div>
           )}
 
-          <div className="flex flex-col gap-2 mt-2">
-            {restaurant.phone && (
-              <a
-                href={`tel:${restaurant.phone.replace(/\s+/g, "")}`}
-                className="flex items-center gap-2 text-gray-700 hover:text-[#E50914] text-sm font-medium"
-              >
-                <FaPhone className="w-4 h-4" />
-                {restaurant.phone}
-              </a>
-            )}
-
-            {restaurant.socials?.instagram && (
-              <Link
-                href={`https://instagram.com/${restaurant.socials.instagram}`}
-                target="_blank"
-                className="flex items-center gap-2 text-gray-700 hover:text-[#E50914] text-sm font-medium"
-              >
-                <FaInstagram className="w-4 h-4" />
-                {restaurant.socials.instagram}
-              </Link>
-            )}
-            {restaurant.socials?.tiktok && (
-              <Link
-                href={`https://www.tiktok.com/@${restaurant.socials.tiktok}`}
-                target="_blank"
-                className="flex items-center gap-2 text-gray-700 hover:text-[#E50914] text-sm font-medium"
-              >
-                <FaTiktok className="w-4 h-4" />
-                {restaurant.socials.tiktok}
-              </Link>
-            )}
-          </div>
+          {restaurant.socials?.tiktok && (
+            <div className="flex items-center gap-3">
+              <FaTiktok className="w-4 h-4" />
+              <span>{restaurant.socials.tiktok}</span>
+            </div>
+          )}
         </div>
       </div>
     </div>
-  );
+  </div>
+  </div>
+);
+
 }

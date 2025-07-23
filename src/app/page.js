@@ -43,10 +43,10 @@ export default function HomePage() {
   return (
 <>
 
+
   <Header sections={sections} restaurant={restaurantData} />
   <MobileCartBar />
-
-  <main className="max-w-7xl mx-auto px-4 py-6">
+  <main className="max-w-7xl mx-auto py-6">
     <MenuLoader sections={sections} />
   </main>
 </>

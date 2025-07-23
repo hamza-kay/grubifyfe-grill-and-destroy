@@ -1,0 +1,50 @@
+"use client";
+import { useEffect, useState } from "react";
+
+export default function StickySectionTabs({ sections }) {
+  const [activeSection, setActiveSection] = useState(sections?.[0]?.id || "");
+
+  const handleClick = (sectionId) => {
+    setActiveSection(sectionId);
+
+    const el = document.getElementById(`section-${sectionId}`);
+    if (!el) return;
+
+    if (window.scrollY <= 50) {
+      window.scrollTo({ top: 51, behavior: "instant" });
+    }
+
+    requestAnimationFrame(() => {
+      const header = document.querySelector("header");
+      const headerHeight = header?.offsetHeight || 0;
+      const tabs = document.querySelector(".tabs-sticky");
+      const tabsHeight = tabs?.offsetHeight || 0;
+      const totalOffset = headerHeight + tabsHeight + 20;
+      const y = el.getBoundingClientRect().top + window.scrollY - totalOffset;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    });
+  };
+
+  return (
+     <div className="sticky max-w-7xl mx-auto sm:px-4 z-40 top-[75px] md:top-[60px] lg:top-[65px]">
+  
+      <nav className="tabs-sticky max-w-7xl mx-auto bg-white shadow-sm rounded-lg py-3">
+      <div className="flex overflow-x-auto px-4 gap-4 lg:justify-center">
+          {sections.map((section) => (
+            <button
+              key={section.id}
+              onClick={() => handleClick(section.id)}
+              className={`text-sm font-medium px-3 py-2 transition whitespace-nowrap ${
+                activeSection === section.id
+                  ? "text-red-600 border-b-2 border-red-600"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              {section.title}
+            </button>
+          ))}
+        </div>
+      </nav>
+    </div>
+  );
+}

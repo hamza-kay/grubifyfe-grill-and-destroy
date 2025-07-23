@@ -202,8 +202,9 @@ const handleAddToCart = () => {
       src="https://cdn.grubify.co.uk/popularpizza/utensil.webp"
       alt="Fallback image"
       fill
+      
       className="object-contain p-6 grayscale opacity-50"
-      unoptimized
+      optimized
       priority
     />
   ) : (
@@ -211,6 +212,7 @@ const handleAddToCart = () => {
       src={dealItem.image_url}
       alt={dealItem.name}
       fill
+      sizes="(max-width: 768px) 100vw, 640px"
       className="object-cover"
       onError={() => setImgError(true)}
       priority

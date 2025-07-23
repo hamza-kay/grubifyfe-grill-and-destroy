@@ -14,7 +14,7 @@
   --color-destructive: #DC2626;
   
 
-  --font-family-sans: var(--font-geist-sans), sans-serif;
+  --font-family-sans: var(--font-inter), sans-serif;
 
   --font-size-base: 16px;
   --font-size-lg: 18px;
@@ -31,7 +31,7 @@
 
 
 html, body {
-  font-family: var(--font-geist-sans), sans-serif;
+  font-family: var(--font-inter);
   font-size: 16px;
   color: #333;
   background: #f9f9f9;  
