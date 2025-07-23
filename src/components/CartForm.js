@@ -1,16 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import clsx from "clsx";
+import { Bike, Store } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Bike, Store } from "lucide-react";
-import clsx from "clsx";
 import { useCheckoutStore } from "@/store/useCheckoutStore";
+import { FormSchema } from "@/lib/formSchema";
 
 export default function CartForm() {
   const customer = useCheckoutStore((state) => state.customer);
   const setCustomer = useCheckoutStore((state) => state.setCustomer);
+
+  const {
+    register,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(FormSchema),
+    mode: "onBlur",
+    defaultValues: customer,
+  });
+
+  const fulfillmentType = watch("fulfillmentType");
+
+  useEffect(() => {
+    const subscription = watch((value) => {
+      setCustomer(value);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, setCustomer]);
 
   return (
     <Card>
@@ -19,35 +42,41 @@ export default function CartForm() {
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Input
-            placeholder="First Name"
-            value={customer.firstName}
-            onChange={(e) =>
-              setCustomer({ firstName: e.target.value })
-            }
-          />
-          <Input
-            placeholder="Last Name"
-            value={customer.lastName}
-            onChange={(e) =>
-              setCustomer({ lastName: e.target.value })
-            }
-          />
+          <div>
+            <Input placeholder="First Name" {...register("firstName")} />
+            <div className="h-5">
+              {errors.firstName && (
+                <p className="text-sm text-red-600">{errors.firstName.message}</p>
+              )}
+            </div>
+          </div>
+          <div>
+            <Input placeholder="Last Name" {...register("lastName")} />
+            <div className="h-5">
+              {errors.lastName && (
+                <p className="text-sm text-red-600">{errors.lastName.message}</p>
+              )}
+            </div>
+          </div>
         </div>
-        <Input
-          placeholder="Email Address"
-          value={customer.email}
-          onChange={(e) =>
-            setCustomer({ email: e.target.value })
-          }
-        />
-        <Input
-          placeholder="Phone Number"
-          value={customer.phoneNumber}
-          onChange={(e) =>
-            setCustomer({ phoneNumber: e.target.value })
-          }
-        />
+
+        <div>
+          <Input placeholder="Email Address" {...register("email")} />
+          <div className="h-5">
+            {errors.email && (
+              <p className="text-sm text-red-600">{errors.email.message}</p>
+            )}
+          </div>
+        </div>
+
+        <div>
+          <Input placeholder="Phone Number" {...register("phoneNumber")} />
+          <div className="h-5">
+            {errors.phoneNumber && (
+              <p className="text-sm text-red-600">{errors.phoneNumber.message}</p>
+            )}
+          </div>
+        </div>
 
         <CardTitle className="mt-8">Delivery Details</CardTitle>
 
@@ -55,11 +84,12 @@ export default function CartForm() {
           <Button
             className={clsx(
               "flex items-center gap-2 px-4 py-2 rounded text-sm font-medium border border-red-600 transition-colors",
-              customer.fulfillmentType === "DELIVERY"
+              fulfillmentType === "DELIVERY"
                 ? "bg-red-600 text-white hover:bg-red-700"
                 : "bg-white text-red-600 hover:bg-red-50"
             )}
-            onClick={() => setCustomer({ fulfillmentType: "DELIVERY" })}
+            type="button"
+            onClick={() => setValue("fulfillmentType", "DELIVERY")}
           >
             <Bike className="w-4 h-4" />
             Delivery
@@ -67,11 +97,12 @@ export default function CartForm() {
           <Button
             className={clsx(
               "flex items-center gap-2 px-4 py-2 rounded text-sm font-medium border border-red-600 transition-colors",
-              customer.fulfillmentType === "PICKUP"
+              fulfillmentType === "PICKUP"
                 ? "bg-red-600 text-white hover:bg-red-700"
                 : "bg-white text-red-600 hover:bg-red-50"
             )}
-            onClick={() => setCustomer({ fulfillmentType: "PICKUP" })}
+            type="button"
+            onClick={() => setValue("fulfillmentType", "PICKUP")}
           >
             <Store className="w-4 h-4" />
             Pickup
@@ -79,7 +110,7 @@ export default function CartForm() {
         </div>
 
         <div className="text-sm text-gray-700 flex items-center gap-2 mt-2">
-          {customer.fulfillmentType === "DELIVERY" ? (
+          {fulfillmentType === "DELIVERY" ? (
             <>
               <Bike className="w-4 h-4 text-gray-500" />
               Estimated delivery: <span className="font-medium">30-40 min</span>
@@ -95,50 +126,52 @@ export default function CartForm() {
         <div
           className={clsx(
             "grid grid-cols-1 gap-4 transition-all duration-300",
-            customer.fulfillmentType === "DELIVERY"
+            fulfillmentType === "DELIVERY"
               ? "opacity-100 max-h-[1000px]"
               : "opacity-0 max-h-0 overflow-hidden"
           )}
         >
-          <Input
-            placeholder="Street Address"
-            value={customer.deliveryAddress}
-            onChange={(e) =>
-              setCustomer({ deliveryAddress: e.target.value })
-            }
-          />
-          <Input
-            placeholder="Apartment or building name (optional)"
-            value={customer.apartment}
-            onChange={(e) =>
-              setCustomer({ apartment: e.target.value })
-            }
-          />
+          <div>
+            <Input placeholder="Street Address" {...register("deliveryAddress")} />
+            <div className="h-5">
+              {errors.deliveryAddress && (
+                <p className="text-sm text-red-600">{errors.deliveryAddress.message}</p>
+              )}
+            </div>
+          </div>
+
+          <div>
+            <Input
+              placeholder="Apartment or building name (optional)"
+              {...register("apartment")}
+            />
+            <div className="h-5" />
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input
-              placeholder="Postcode"
-              value={customer.postcode}
-              onChange={(e) =>
-                setCustomer({ postcode: e.target.value })
-              }
-            />
-            <Input
-              placeholder="City"
-              value={customer.city}
-              onChange={(e) =>
-                setCustomer({ city: e.target.value })
-              }
-            />
+            <div>
+              <Input placeholder="Postcode" {...register("postcode")} />
+              <div className="h-5">
+                {errors.postcode && (
+                  <p className="text-sm text-red-600">{errors.postcode.message}</p>
+                )}
+              </div>
+            </div>
+            <div>
+              <Input placeholder="City" {...register("city")} />
+              <div className="h-5">
+                {errors.city && (
+                  <p className="text-sm text-red-600">{errors.city.message}</p>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
-        <Input
-          placeholder="Additional notes (optional)"
-          value={customer.notes}
-          onChange={(e) =>
-            setCustomer({ notes: e.target.value })
-          }
-        />
+        <div>
+          <Input placeholder="Additional notes (optional)" {...register("notes")} />
+          <div className="h-5" />
+        </div>
       </CardContent>
     </Card>
   );

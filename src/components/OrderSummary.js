@@ -8,6 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { X, Minus, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAppId } from "@/components/AppIdProvider";
+import { FormSchema } from "@/lib/formSchema";
+
 
 export default function OrderSummary() {
   const [isClient, setIsClient] = useState(false);
@@ -28,6 +30,8 @@ export default function OrderSummary() {
   const removeDealFromCart = useCartStore((state) => state.removeDealFromCart);
 
   const customer = useCheckoutStore((state) => state.customer);
+  const isValid = FormSchema.safeParse(customer).success;
+
 
   const handleCheckout = async () => {
     if (!customer.fulfillmentType) {
@@ -267,7 +271,7 @@ export default function OrderSummary() {
             size="lg"
             className="w-full bg-red-600 text-white hover:bg-red-700 hidden lg:block"
             onClick={handleCheckout}
-            disabled={cartItems.length === 0}
+            disabled={cartItems.length === 0 || !isValid}
           >
             Proceed to Payment
           </Button>
