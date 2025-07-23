@@ -22,7 +22,6 @@ export default function MenuItem({ item, onClick }) {
             src={fallbackUrl}
             alt="Fallback"
             fill
-            unoptimized
             className="object-contain p-6 grayscale opacity-50 bg-gray-100"
             sizes="(max-width: 768px) 100vw, 50vw"
           />
