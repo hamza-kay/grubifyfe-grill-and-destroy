@@ -19,7 +19,7 @@ export default function StickySectionTabs({ sections }) {
       const headerHeight = header?.offsetHeight || 0;
       const tabs = document.querySelector(".tabs-sticky");
       const tabsHeight = tabs?.offsetHeight || 0;
-      const totalOffset = headerHeight + tabsHeight + 20;
+      const totalOffset = headerHeight + tabsHeight + 15;
       const y = el.getBoundingClientRect().top + window.scrollY - totalOffset;
       window.scrollTo({ top: y, behavior: "smooth" });
     });

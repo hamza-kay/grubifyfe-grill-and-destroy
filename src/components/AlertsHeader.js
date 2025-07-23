@@ -41,7 +41,7 @@ export default function AlertsHeader({ restaurant }) {
 
 return (
 <div className="w-full bg-gray-50 py-8">
-  <div className="max-w-7xl mx-auto sm:px-4">
+  <div className="max-w-7xl mx-auto px-4">
 
     <div className="bg-white shadow-lg rounded-lg overflow-hidden md:flex">
 
