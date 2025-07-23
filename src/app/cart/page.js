@@ -2,16 +2,14 @@
 
 import CartForm from "@/components/CartForm";
 import OrderSummary from "@/components/OrderSummary";
-console.log("CartForm:", CartForm);
-console.log("Summary:", OrderSummary);
+
 export default function CartPage() {
   return (
     <main className="max-w-7xl mx-auto px-4 py-10">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         {/* Left: Checkout Form */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 min-h-[700px] transition-all">
           <CartForm />
-          
         </div>
 
         {/* Right: Order Summary */}
