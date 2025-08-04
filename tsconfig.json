@@ -34,7 +34,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-, "src/app/payment-result/page.js", "src/app/checkout/page.js"  ],
+, "src/app/checkout/page.js"  ],
   "exclude": [
     "node_modules"
   ]
