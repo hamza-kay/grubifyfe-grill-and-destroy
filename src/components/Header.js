@@ -37,7 +37,7 @@ export default function Header({ sections, restaurant }) {
    <div className="max-w-7xl mx-auto flex items-center justify-between md:justify-between justify-center  px-4 py-4 sm:py-3 md:py-2">
       <Link href="/" className="flex items-center gap-3">
         <Image
-          src={restaurant.logo || "/images/placeholder.jpg"}
+          src={ "/images/placeholder.jpg"}
           alt={restaurant?.title || ""}
           width={160}
           height={50}
