@@ -95,19 +95,30 @@ return (
             </div>
           )}
 
-          {restaurant.socials?.instagram && (
-            <div className="flex items-center gap-3">
-              <FaInstagram className="w-4 h-4" />
-              <span>{restaurant.socials.instagram}</span>
-            </div>
-          )}
+{restaurant.socials?.instagram && (
+  <Link
+    href={`https://instagram.com/${restaurant.socials.instagram}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="flex items-center gap-3 text-gray-700 hover:text-[#E50914] transition"
+  >
+    <FaInstagram className="w-4 h-4" />
+    <span>{restaurant.socials.instagram}</span>
+  </Link>
+)}
 
-          {restaurant.socials?.tiktok && (
-            <div className="flex items-center gap-3">
-              <FaTiktok className="w-4 h-4" />
-              <span>{restaurant.socials.tiktok}</span>
-            </div>
-          )}
+{restaurant.socials?.tiktok && (
+  <Link
+    href={`https://www.tiktok.com/@${restaurant.socials.tiktok}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="flex items-center gap-3 text-gray-700 hover:text-[#E50914] transition"
+  >
+    <FaTiktok className="w-4 h-4" />
+    <span>{restaurant.socials.tiktok}</span>
+  </Link>
+)}
+
         </div>
       </div>
     </div>
