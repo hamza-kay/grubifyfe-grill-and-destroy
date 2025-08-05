@@ -10,6 +10,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'api.ramtd.net',
       },
+      {
+  protocol: 'https',
+  hostname: 'grubify-app-artifacts.s3.eu-west-2.amazonaws.com',
+}
     ],
   },
 };
