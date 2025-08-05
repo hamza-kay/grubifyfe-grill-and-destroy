@@ -1,7 +1,9 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useAppId } from "@/components/AppIdProvider";
+import { useContext } from "react";
+import { AppIdContext } from "@/components/AppIdProvider";
+
 import { fetchRestaurantData, fetchSectionItems } from "@/utils/api";
 import MenuItem from "@/components/MenuItem";
 import ItemModal from "@/components/ItemModal";
@@ -10,7 +12,7 @@ import DealItemModal from "@/components/DealItemModal";
 import { useState } from "react";
 
 export default function MenuLoader({ sections }) {
-  const { appId, loading } = useAppId();
+  const { appId } = useContext(AppIdContext);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isDealItem, setIsDealItem] = useState(false);
   
@@ -21,7 +23,7 @@ export default function MenuLoader({ sections }) {
     isError: isErrorRestaurant,
   } = useQuery({
     queryKey: ["restaurantData", appId],
-    enabled: !!appId && !loading,
+    enabled: !!appId,
     queryFn: () => fetchRestaurantData(appId),
   });
 
@@ -44,11 +46,7 @@ export default function MenuLoader({ sections }) {
     enabled: sections.length > 0 && !!appId,
   });
 
-  if (
-    loading ||
-    isLoadingRestaurant ||
-    isLoadingSectionItems
-  ) {
+if (isLoadingRestaurant || isLoadingSectionItems) {
     return (
      <main className="max-w-7xl mx-auto px-4 pt-0 pb-6">
 

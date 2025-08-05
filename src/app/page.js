@@ -7,17 +7,18 @@ import Header from "@/components/Header";
 import MenuLoader from "@/components/MenuLoader";
 import MobileCartBar from "@/components/MobileCartBar";
 import LoadingScreen from "@/components/LoadingScreen";
-
+import { useContext } from "react";
+import { AppIdContext } from "@/components/AppIdProvider";
 
 export default function HomePage() {
-  const { appId, loading } = useAppId();
+const { appId } = useContext(AppIdContext);
 
   const {
     data: restaurantData,
     isLoading: isLoadingRestaurant,
   } = useQuery({
     queryKey: ["restaurantData", appId],
-    enabled: !!appId && !loading,
+    enabled: !!appId,
     queryFn: () => fetchRestaurantData(appId),
   });
 
@@ -33,9 +34,9 @@ export default function HomePage() {
     queryFn: () => fetchSections(menuId, appId),
   });
 
-  if (loading || isLoadingRestaurant || isLoadingSections) {
-     return <LoadingScreen />;
-  }
+if (isLoadingRestaurant || isLoadingSections) {
+  return <LoadingScreen />;
+}
 
   if (isError) {
     return <div>Error loading sections.</div>;

@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { X, Minus, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useAppId } from "@/components/AppIdProvider";
+import { useContext } from "react";
+import { AppIdContext } from "@/components/AppIdProvider";
 import { FormSchema } from "@/lib/formSchema";
 
 
@@ -19,7 +20,7 @@ export default function OrderSummary() {
     setIsClient(true);
   }, []);
 
-  const { appId, loading: appIdLoading } = useAppId();
+const { appId } = useContext(AppIdContext);
 
   const cartItems = useCartStore((state) => state.cartItems);
   const totalPrice = useCartStore((state) => state.totalPrice("other"));
@@ -122,7 +123,7 @@ export default function OrderSummary() {
     }
   };
 
-  if (!isClient || appIdLoading) {
+  if (!isClient) {
     return (
       <Card>
         <CardHeader>

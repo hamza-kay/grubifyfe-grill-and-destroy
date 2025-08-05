@@ -1,19 +1,14 @@
-"use client";
-import { createContext, useContext, useState } from "react";
+// src/components/AppIdProvider.js (Server Component)
+import { createContext } from "react";
 
-const AppIdContext = createContext(null);
-
-const envAppId = process.env.NEXT_PUBLIC_APP_ID_KEY;
+export const AppIdContext = createContext({ appId: null });
 
 export function AppIdProvider({ children }) {
-  // ✅ Skip loading state completely
+  const appId = process.env.NEXT_PUBLIC_APP_ID_KEY;
+
   return (
-    <AppIdContext.Provider value={{ appId: envAppId, loading: false }}>
+    <AppIdContext.Provider value={{ appId }}>
       {children}
     </AppIdContext.Provider>
   );
-}
-
-export function useAppId() {
-  return useContext(AppIdContext);
 }

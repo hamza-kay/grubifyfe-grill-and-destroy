@@ -1,6 +1,7 @@
 "use client";
 
-import { useAppId } from "@/components/AppIdProvider";
+import { useContext } from "react";
+import { AppIdContext } from "@/components/AppIdProvider";
 import { FaInstagram, FaTiktok, FaPhone } from "react-icons/fa";
 import Link from "next/link";
 import Image from "next/image";
@@ -32,9 +33,10 @@ function getTodayHours(opening_hours) {
 }
 
 export default function AlertsHeader({ restaurant }) {
-  const { appId, loading: appLoading } = useAppId();
+ 
+  
 
-  if (!restaurant || appLoading) return null;
+  if (!restaurant) return null;
 
   const isRestaurantOpen = isRestaurantCurrentlyOpen(restaurant);
   const todayHours = getTodayHours(restaurant.opening_hours);
