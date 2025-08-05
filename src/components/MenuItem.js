@@ -24,6 +24,7 @@ export default function MenuItem({ item, onClick }) {
             fill
             className="object-contain p-6 grayscale opacity-50 bg-gray-200"
             sizes="(max-width: 768px) 100vw, 50vw"
+            priority 
           />
         ) : (
           <Image
@@ -33,6 +34,7 @@ export default function MenuItem({ item, onClick }) {
             className="object-cover w-full h-full"
             sizes="(max-width: 768px) 100vw, 50vw"
             onError={() => setImgError(true)}
+            priority 
           />
         )}
       </div>
