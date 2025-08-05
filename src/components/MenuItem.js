@@ -39,10 +39,10 @@ export default function MenuItem({ item, onClick }) {
 
       {/* CONTENT */}
       <div className="p-6">
-        <h3 className="text-xl font-semibold text-gray-800">
+        <h3 className="text-xl font-semibold text-gray-800 line-clamp-1">
           {item.name}
         </h3>
-        <p className="text-gray-600 mt-2 text-sm">
+        <p className="text-gray-600 mt-2 text-sm line-clamp-2">
           {item.description || "Delicious meal prepared with the finest ingredients."}
         </p>
         {item.kcal && (
