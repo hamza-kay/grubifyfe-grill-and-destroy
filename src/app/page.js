@@ -6,6 +6,7 @@ import { fetchRestaurantData, fetchSections } from "@/utils/api";
 import Header from "@/components/Header";
 import MenuLoader from "@/components/MenuLoader";
 import MobileCartBar from "@/components/MobileCartBar";
+import LoadingScreen from "@/components/LoadingScreen";
 
 
 export default function HomePage() {
@@ -33,7 +34,7 @@ export default function HomePage() {
   });
 
   if (loading || isLoadingRestaurant || isLoadingSections) {
-    return <div>Loading...</div>;
+     return <LoadingScreen />;
   }
 
   if (isError) {
