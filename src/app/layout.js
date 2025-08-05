@@ -13,7 +13,7 @@ const inter = Inter({
 ;
 
 export const metadata = {
-  title: "Create Next App",
+  title: "Popular Pizza",
 };
 
 export const viewport = {
