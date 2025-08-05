@@ -1,28 +1,14 @@
 "use client";
-
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState } from "react";
 
 const AppIdContext = createContext(null);
 
+const envAppId = process.env.NEXT_PUBLIC_APP_ID_KEY;
+
 export function AppIdProvider({ children }) {
-  const [appId, setAppId] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const envAppId = process.env.NEXT_PUBLIC_APP_ID_KEY;
-
-    if (envAppId) {
-      console.log("✅ Loaded appId from .env:", envAppId);
-      setAppId(envAppId);
-    } else {
-      console.warn("⚠️ NEXT_PUBLIC_APP_ID_KEY is not defined in .env");
-    }
-
-    setLoading(false);
-  }, []);
-
+  // ✅ Skip loading state completely
   return (
-    <AppIdContext.Provider value={{ appId, loading }}>
+    <AppIdContext.Provider value={{ appId: envAppId, loading: false }}>
       {children}
     </AppIdContext.Provider>
   );
