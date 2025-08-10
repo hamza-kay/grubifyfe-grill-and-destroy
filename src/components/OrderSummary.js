@@ -166,7 +166,7 @@ const { appId } = useContext(AppIdContext);
                         </p>
     <button
   onClick={() => removeDealFromCart(groupKey)}
-  className="text-gray-400 hover:text-red-600 transition"
+  className="text-gray-400 hover:text-accent transition"
 >
   <X className="w-4 h-4" />
 </button>
@@ -205,7 +205,7 @@ const { appId } = useContext(AppIdContext);
                       </ul>
                       <div className="mt-2 flex items-center gap-2">
                         <button
-                          className="w-7 h-7 border border-red-600 text-red-600 bg-white hover:bg-red-50 rounded flex items-center justify-center transition-colors"
+                          className="w-7 h-7 border border-accent text-accent bg-white hover:bg-accent/10 rounded flex items-center justify-center transition-colors"
                           onClick={() => decreaseQuantity(item.id)}
                         >
                           <Minus className="w-3 h-3" />
@@ -214,7 +214,7 @@ const { appId } = useContext(AppIdContext);
                           {item.quantity}
                         </span>
                         <button
-                          className="w-7 h-7 border border-red-600 text-red-600 bg-white hover:bg-red-50 rounded flex items-center justify-center transition-colors"
+                          className="w-7 h-7 border border-accent text-accent bg-white hover:bg-accent/10 rounded flex items-center justify-center transition-colors"
                           onClick={() => increaseQuantity(item.id)}
                         >
                           <Plus className="w-3 h-3" />
@@ -270,7 +270,7 @@ const { appId } = useContext(AppIdContext);
 
           <Button
             size="lg"
-            className="w-full bg-red-600 text-white hover:bg-red-700 hidden lg:block"
+            className="w-full !bg-accent !text-white !hover:bg-secondary hidden lg:block"
             onClick={handleCheckout}
             disabled={cartItems.length === 0 || !isValid}
           >
@@ -282,7 +282,7 @@ const { appId } = useContext(AppIdContext);
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 shadow-md lg:hidden">
         <Button
           size="lg"
-          className="w-full bg-red-600 text-white hover:bg-red-700"
+          className="w-full !bg-accent !text-white !hover:bg-secondary"
           onClick={handleCheckout}
           disabled={cartItems.length === 0}
         >
