@@ -50,7 +50,7 @@ export default function Header({ sections, restaurant }) {
         <Button
           variant="default"
           size="sm"
-    className="hidden md:inline-flex bg-[#E50914] hover:bg-[#B00020] text-white"
+    className="hidden md:inline-flex bg-accent hover:bg-secondary text-white"
 >
           Order Now
         </Button>
@@ -58,7 +58,7 @@ export default function Header({ sections, restaurant }) {
         <Link href="/cart" className="relative">
          <ShoppingCart className="w-5 h-5 text-white" />
           {totalItems > 0 && (
-            <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+            <span className="absolute -top-2 -right-2 bg-accent text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
               {totalItems}
               
             </span>

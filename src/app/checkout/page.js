@@ -29,7 +29,7 @@ const appearance = {
 };
 
   if (!clientSecret) {
-    return <p className="p-4 text-red-600">No payment found.</p>;
+    return <p className="p-4 text-accent">No payment found.</p>;
   }
 
   return (

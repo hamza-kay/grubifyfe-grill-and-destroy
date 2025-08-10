@@ -62,7 +62,7 @@ return (
 
       {/* Right Content */}
       <div className="p-8">
-        <div className="uppercase tracking-wide text-sm text-red-600 font-semibold">
+        <div className="uppercase tracking-wide text-sm text-accent font-semibold">
           {restaurant.title}
         </div>
 
@@ -71,7 +71,7 @@ return (
             className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${
               isRestaurantOpen
                 ? "bg-green-100 text-green-800"
-                : "bg-red-100 text-red-800"
+                : "bg-accent/10 text-accent"
             }`}
           >
             {isRestaurantOpen ? "OPEN" : "CLOSED"}

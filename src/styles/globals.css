@@ -6,13 +6,24 @@
   --breakpoint-md: 768px; */
 
   --color-primary: #1C1C1E;
-  --color-accent: #E50914;
-  --color-secondary: #B00020;
+
+  /* Popular red /*
+  /* --color-accent: #E50914;
+  --color-secondary: #B00020; */
+
+    /* speedo blue */
+  --color-accent: #0C5AA4;
+  --color-secondary: #094881; /* darker shade for hover */  
   --color-highlight: #E9C46A;
   --color-muted: #6B7280;
   --color-background: #121212;
   --color-light: #F3F4F6;
-  --color-destructive: #DC2626;
+
+  --color-destructive: #0C5AA4; /* your blue */
+  /* --color-destructive: #DC2626 popular red */
+ 
+
+
   
 
   --font-family-sans: var(--font-inter), sans-serif;

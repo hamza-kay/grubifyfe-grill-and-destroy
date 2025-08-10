@@ -311,7 +311,7 @@ const matchingItems = fullMenuItems.filter((item) =>
                           varKey
                         )
                       }
-                      className="accent-red-600 w-5 h-5 border-gray-300 rounded"
+                      className="accent-accent w-5 h-5 border-gray-300 rounded"
                     />
                     <span className="text-gray-900">
                       {selectedItem.variation[varKey].name}
@@ -411,13 +411,13 @@ const matchingItems = fullMenuItems.filter((item) =>
           <div className="flex items-center justify-between bg-white/80 backdrop-blur border-t px-4 py-3">
             <button
               onClick={onClose}
-              className="text-red-600 hover:text-red-700 text-xl font-bold px-3 py-1 rounded-md bg-gray-100 hover:bg-gray-200 transition"
+              className="text-accent hover:text-secondary text-xl font-bold px-3 py-1 rounded-md bg-gray-100 hover:bg-gray-200 transition"
             >
               ×
             </button>
             <Button
               onClick={handleAddToCart}
-              className="bg-red-600 hover:bg-red-700 text-white font-semibold flex-grow ml-4 py-3 rounded transition text-base"
+              className="bg-accent hover:bg-secondary text-white font-semibold flex-grow ml-4 py-3 rounded transition text-base"
             >
               Add to Order £{totalPrice}
             </Button>

@@ -36,8 +36,8 @@ export default function StickySectionTabs({ sections }) {
               onClick={() => handleClick(section.id)}
               className={`text-sm font-medium px-3 py-2 transition whitespace-nowrap ${
                 activeSection === section.id
-                  ? "text-red-600 border-b-2 border-red-600"
-                  : "text-gray-500 hover:text-gray-700"
+                  ? "text-accent border-b-2 border-accent"
+                  : "text-gray-500 hover:text-secondary"
               }`}
             >
               {section.title}

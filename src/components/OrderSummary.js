@@ -161,7 +161,7 @@ const { appId } = useContext(AppIdContext);
                     <div className="flex justify-between items-center">
                       <p className="font-medium text-gray-900">{deal.name}</p>
                       <div className="flex items-center gap-2">
-                        <p className="text-red-600 font-semibold text-sm">
+                        <p className="text-accent font-semibold text-sm">
                           £{(deal.price * deal.quantity).toFixed(2)}
                         </p>
     <button
@@ -222,12 +222,12 @@ const { appId } = useContext(AppIdContext);
                       </div>
                     </div>
                     <div className="flex items-center gap-4 pt-1">
-                      <p className="text-red-600 font-semibold text-sm">
+                      <p className="text-accent font-semibold text-sm">
                         £{(item.price * item.quantity).toFixed(2)}
                       </p>
                       <button
                         onClick={() => removeFromCart(item.id)}
-                        className="text-gray-400 hover:text-red-600 transition"
+                        className="text-gray-400 hover:text-accent transition"
                       >
                         <X className="w-4 h-4" />
                       </button>

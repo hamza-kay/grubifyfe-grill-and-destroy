@@ -46,7 +46,7 @@ export default function CartForm() {
             <Input placeholder="First Name" {...register("firstName")} />
             <div className="h-5">
               {errors.firstName && (
-                <p className="text-sm text-red-600">{errors.firstName.message}</p>
+                <p className="text-sm text-accent">{errors.firstName.message}</p>
               )}
             </div>
           </div>
@@ -54,7 +54,7 @@ export default function CartForm() {
             <Input placeholder="Last Name" {...register("lastName")} />
             <div className="h-5">
               {errors.lastName && (
-                <p className="text-sm text-red-600">{errors.lastName.message}</p>
+                <p className="text-sm text-accent">{errors.lastName.message}</p>
               )}
             </div>
           </div>
@@ -64,7 +64,7 @@ export default function CartForm() {
           <Input placeholder="Email Address" {...register("email")} />
           <div className="h-5">
             {errors.email && (
-              <p className="text-sm text-red-600">{errors.email.message}</p>
+              <p className="text-sm text-accent">{errors.email.message}</p>
             )}
           </div>
         </div>
@@ -73,7 +73,7 @@ export default function CartForm() {
           <Input placeholder="Phone Number" {...register("phoneNumber")} />
           <div className="h-5">
             {errors.phoneNumber && (
-              <p className="text-sm text-red-600">{errors.phoneNumber.message}</p>
+              <p className="text-sm text-accent">{errors.phoneNumber.message}</p>
             )}
           </div>
         </div>
@@ -83,10 +83,10 @@ export default function CartForm() {
         <div className="flex gap-2 mt-2">
           <Button
             className={clsx(
-              "flex items-center gap-2 px-4 py-2 rounded text-sm font-medium border border-red-600 transition-colors",
+              "flex items-center gap-2 px-4 py-2 rounded text-sm font-medium border border-accent transition-colors",
               fulfillmentType === "DELIVERY"
-                ? "bg-red-600 text-white hover:bg-red-700"
-                : "bg-white text-red-600 hover:bg-red-50"
+                ? "bg-accent text-white hover:bg-secondary"
+                : "bg-white text-accent hover:bg-accent/10"
             )}
             type="button"
             onClick={() => setValue("fulfillmentType", "DELIVERY")}
@@ -96,10 +96,10 @@ export default function CartForm() {
           </Button>
           <Button
             className={clsx(
-              "flex items-center gap-2 px-4 py-2 rounded text-sm font-medium border border-red-600 transition-colors",
+              "flex items-center gap-2 px-4 py-2 rounded text-sm font-medium border border-accent transition-colors",
               fulfillmentType === "PICKUP"
-                ? "bg-red-600 text-white hover:bg-red-700"
-                : "bg-white text-red-600 hover:bg-red-50"
+                ? "bg-accent text-white hover:bg-secondary"
+                : "bg-white text-accent hover:bg-accent/10"
             )}
             type="button"
             onClick={() => setValue("fulfillmentType", "PICKUP")}
@@ -135,7 +135,7 @@ export default function CartForm() {
             <Input placeholder="Street Address" {...register("deliveryAddress")} />
             <div className="h-5">
               {errors.deliveryAddress && (
-                <p className="text-sm text-red-600">{errors.deliveryAddress.message}</p>
+                <p className="text-sm text-accent">{errors.deliveryAddress.message}</p>
               )}
             </div>
           </div>
@@ -153,7 +153,7 @@ export default function CartForm() {
               <Input placeholder="Postcode" {...register("postcode")} />
               <div className="h-5">
                 {errors.postcode && (
-                  <p className="text-sm text-red-600">{errors.postcode.message}</p>
+                  <p className="text-sm text-accent">{errors.postcode.message}</p>
                 )}
               </div>
             </div>
@@ -161,7 +161,7 @@ export default function CartForm() {
               <Input placeholder="City" {...register("city")} />
               <div className="h-5">
                 {errors.city && (
-                  <p className="text-sm text-red-600">{errors.city.message}</p>
+                  <p className="text-sm text-accent">{errors.city.message}</p>
                 )}
               </div>
             </div>

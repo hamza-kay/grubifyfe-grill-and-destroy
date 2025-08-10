@@ -69,7 +69,7 @@ if (isLoadingRestaurant || isLoadingSectionItems) {
   ) {
     return (
       <main className="max-w-7xl mx-auto px-4 py-6 text-center">
-        <p className="text-red-600 mb-4">
+        <p className="text-accent mb-4">
           Error loading menu.
         </p>
         <button
@@ -92,7 +92,7 @@ return (
 <h2
   id={`section-${section.sectionId}`}
   data-section-id={section.sectionId}
-  className="text-3xl font-bold text-gray-900 mb-8"
+  className="text-3xl font-bold text-accent mb-8"
 >
   {section.sectionTitle}
 </h2>

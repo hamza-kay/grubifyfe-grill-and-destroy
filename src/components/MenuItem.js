@@ -51,7 +51,7 @@ export default function MenuItem({ item, onClick }) {
           <p className="text-xs text-gray-500 mt-1">{item.kcal} kcal</p>
         )}
 
-        <p className="text-red-600 font-bold text-lg mt-4">
+        <p className="text-accent font-bold text-lg mt-4">
           £{(item.price || Object.values(item.sizes || {})[0] || 0).toFixed(2)}
         </p>
       </div>
