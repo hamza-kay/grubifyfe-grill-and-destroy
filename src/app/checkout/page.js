@@ -25,12 +25,6 @@ const appearance = {
   variables: {
     fontFamily: "Inter, sans-serif",
     borderRadius: "6px"
-  },
-  rules: {
-    '.PaymentElement--paypal': {
-      '--paypal-button-color': 'gold', // or 'blue', 'silver', 'black'
-      '--paypal-button-height': '40px'
-    }
   }
 };
 
@@ -84,7 +78,7 @@ function CheckoutForm({ amount, router }) {
     <Button
       type="submit"
       variant="outline"
-      className="w-full text-gray-800 border-gray-300 hover:bg-gray-50"
+      className="!w-full !text-gray-800 !border-gray-300 !hover:bg-gray-50"
     >
       Pay £{(amount / 100).toFixed(2)}
     </Button>
