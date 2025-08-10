@@ -25,6 +25,12 @@ const appearance = {
   variables: {
     fontFamily: "Inter, sans-serif",
     borderRadius: "6px"
+  },
+  rules: {
+    '.PaymentElement--paypal': {
+      '--paypal-button-color': 'gold', // or 'blue', 'silver', 'black'
+      '--paypal-button-height': '40px'
+    }
   }
 };
 
