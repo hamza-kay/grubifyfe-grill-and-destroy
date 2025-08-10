@@ -78,7 +78,7 @@ function CheckoutForm({ amount, router }) {
     <Button
       type="submit"
       variant="outline"
-      className="!w-full !text-gray-800 !border-gray-300 !hover:bg-gray-50"
+      className="!w-full !bg-white !text-gray-800 !border-gray-300 !hover:bg-gray-50"
     >
       Pay £{(amount / 100).toFixed(2)}
     </Button>
