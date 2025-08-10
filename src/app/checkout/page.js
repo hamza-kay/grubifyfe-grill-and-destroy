@@ -75,11 +75,11 @@ function CheckoutForm({ amount, router }) {
 
   <form onSubmit={handleSubmit} className="space-y-4">
     <PaymentElement />
-    <Button
-      type="submit"
-      variant="outline"
-      className="!w-full !bg-white !text-gray-800 !border-gray-300 !hover:bg-gray-50"
-    >
+ <Button
+  type="submit"
+  variant="outline"
+  className="!w-full !bg-[var(--color-accent)] !text-white !border-[var(--color-accent)] hover:!bg-[var(--color-secondary)]"
+>
       Pay £{(amount / 100).toFixed(2)}
     </Button>
   </form>
