@@ -90,7 +90,7 @@ flattenedRequirements.forEach((req) => {
 
       if (selectedVariation && selectedItem.variation?.[selectedVariation]) {
         const varPrice =
-          selectedItem.variation[selectedVariation].prices?.["15"] || 0;
+          selectedItem.variation?.[selectedVariation]?.prices?.[req.size] || 0;
         total += varPrice;
       }
 
@@ -98,11 +98,11 @@ flattenedRequirements.forEach((req) => {
         selectedAddons.forEach((addonName) => {
           const addonData = selectedItem.addons[addonName];
           let price = 0;
-          if (typeof addonData === "object") {
-            price = addonData["15"] || 0;
-          } else {
-            price = addonData;
-          }
+       if (typeof addonData === "object") {
+  price = addonData[req.size] || 0;
+} else {
+  price = addonData;
+}
           total += price;
         });
       }
@@ -172,17 +172,17 @@ setErrors({});
       variationKey &&
       selectedItem.variation?.[variationKey]
     ) {
-      customPrice += selectedItem.variation[variationKey].prices?.["15"] || 0;
+      customPrice += selectedItem.variation?.[variationKey]?.prices?.[req.size] || 0;
     }
 
     selection.selectedAddons.forEach((addonName) => {
       const addonData = selectedItem.addons?.[addonName];
       let price = 0;
-      if (typeof addonData === "object") {
-        price = addonData?.["15"] || 0;
-      } else {
-        price = addonData || 0;
-      }
+     if (typeof addonData === "object") {
+  price = addonData?.[req.size] || 0;
+} else {
+  price = addonData || 0;
+}
       customPrice += price;
     });
 
@@ -323,8 +323,7 @@ const matchingItems = fullMenuItems.filter((item) =>
         Object.keys(selectedItem.variation).length > 0 && (
           <div className="divide-y divide-gray-200 border rounded">
             {Object.keys(selectedItem.variation).map((varKey) => {
-              const varPrice =
-                selectedItem.variation[varKey].prices?.["15"] || 0;
+              const varPrice = selectedItem.variation?.[varKey]?.prices?.[req.size] || 0;
               return (
                 <label
                   key={varKey}
@@ -379,11 +378,11 @@ const matchingItems = fullMenuItems.filter((item) =>
               {Object.keys(selectedItem.addons).map((addonName) => {
                 const addonData = selectedItem.addons[addonName];
                 let price = 0;
-                if (typeof addonData === "object") {
-                  price = addonData["15"] || 0;
-                } else {
-                  price = addonData;
-                }
+               if (typeof addonData === "object") {
+  price = addonData[req.size] || 0;
+} else {
+  price = addonData;
+}
 
                 return (
                   <label
