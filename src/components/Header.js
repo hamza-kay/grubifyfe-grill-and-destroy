@@ -11,6 +11,7 @@ import StickySectionTabs from "@/components/StickySectionTabs";
 
 export default function Header({ sections, restaurant }) {
   const totalItems = useCartStore((state) => state.totalItems());
+  const groupedCount = useCartStore((state) => state.groupedCartCount());
   const totalPrice = useCartStore((state) => state.totalPrice("other")); 
   const [isHeroHidden, setIsHeroHidden] = useState(false);
   const [activeSection, setActiveSection] = useState(sections?.[0]?.id || "");
@@ -57,9 +58,9 @@ export default function Header({ sections, restaurant }) {
      <User className="w-5 h-5 text-white" />
         <Link href="/cart" className="relative">
          <ShoppingCart className="w-5 h-5 text-white" />
-          {totalItems > 0 && (
+          {groupedCount > 0 && (
             <span className="absolute -top-2 -right-2 bg-accent text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
-              {totalItems}
+              {groupedCount}
               
             </span>
             

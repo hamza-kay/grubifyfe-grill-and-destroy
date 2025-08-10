@@ -91,6 +91,11 @@ export default function ItemModal({ item, onClose }) {
   if (!item) return null;
 
   const handleAdd = () => {
+      // Require variation if item has any
+  if (item.variation && Object.keys(item.variation).length > 0 && !selectedVariation) {
+    alert("Please select a variation before adding to your order.");
+    return;
+  }
 const numericTotalPrice = parseFloat(totalPrice);
 
 addToCart({
@@ -316,12 +321,14 @@ addToCart({
             >
               ×
             </button>
-            <Button
-              onClick={handleAdd}
-              className="bg-accent hover:bg-secondary text-white font-semibold flex-grow ml-4 py-3 rounded transition text-base"
-            >
-              Add to order £{totalPrice}
-            </Button>
+<Button
+  onClick={handleAdd}
+  disabled={item.variation && Object.keys(item.variation).length > 0 && !selectedVariation}
+  className="bg-accent hover:bg-secondary text-white font-semibold flex-grow ml-4 py-3 rounded transition text-base disabled:opacity-50 disabled:cursor-not-allowed"
+>
+  Add to order £{totalPrice}
+</Button>
+
           </div>
         </div>
       </div>

@@ -16,6 +16,7 @@ export default function DealItemModal({
   const dealBasePrice = Number(dealItem.price) || 0;
   const requirements = dealItem.requirements || [];
   const [imgError, setImgError] = useState(false);
+  const [errors, setErrors] = useState({});
 
 
 
@@ -35,8 +36,14 @@ requirements.forEach((req) => {
 // Create initial selections for each flattened item
 const initialSelections = {};
 flattenedRequirements.forEach((req) => {
+  const matchingItems = fullMenuItems.filter((item) =>
+    Array.isArray(req.ids) && req.ids.includes(Number(item.id))
+  );
+
+  const autoSelectedId = matchingItems.length === 1 ? matchingItems[0].id : null;
+
   initialSelections[req.key] = {
-    selectedItemId: null,
+    selectedItemId: autoSelectedId,
     selectedVariation: null,
     selectedAddons: [],
   };
@@ -107,6 +114,33 @@ flattenedRequirements.forEach((req) => {
   const totalPrice = (dealBasePrice + customizationsTotal).toFixed(2);
 
 const handleAddToCart = () => {
+// ✅ Validate required selections
+const newErrors = {};
+
+for (const key of Object.keys(selections)) {
+  const { selectedItemId, selectedVariation } = selections[key];
+  const selectedItem = fullMenuItems.find((i) => i.id === selectedItemId);
+  const hasVariations = selectedItem?.variation && Object.keys(selectedItem.variation).length > 0;
+
+  if (!selectedItemId) {
+    newErrors[key] = "Please select an item.";
+    continue;
+  }
+
+  if (hasVariations && !selectedVariation) {
+    newErrors[key] = "Please select a variation.";
+    continue;
+  }
+}
+
+if (Object.keys(newErrors).length > 0) {
+  setErrors(newErrors);
+  return;
+}
+
+setErrors({});
+
+
   const parentDealId = uuidv4();
 
   // First, add the main deal item
@@ -325,8 +359,13 @@ const matchingItems = fullMenuItems.filter((item) =>
                 </label>
               );
             })}
+            
           </div>
+          
         )}
+                {errors[req.key] && (
+  <p className="text-sm text-red-600 mt-2">{errors[req.key]}</p>
+)}
 
       {/* Addons */}
       {selectedItem &&
@@ -375,6 +414,7 @@ const matchingItems = fullMenuItems.filter((item) =>
             </div>
           </div>
         )}
+
     </div>
   );
 })}
