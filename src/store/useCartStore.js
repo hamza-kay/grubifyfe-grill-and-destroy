@@ -48,6 +48,8 @@ removeDealFromCart: (dealGroupId) => {
 
 
 
+
+
       increaseQuantity: (itemId) => {
         set((state) => ({
           cartItems: state.cartItems.map((item) =>
@@ -80,6 +82,17 @@ removeDealFromCart: (dealGroupId) => {
           0
         );
       },
+
+      groupedCartCount: () => {
+  const items = get().cartItems;
+
+  // group by parentDealId if it exists, else by id
+  const uniqueGroups = new Set(
+    items.map(item => item.parentDealId || item.id)
+  );
+
+  return uniqueGroups.size;
+},
 
       totalPrice: () => {
         return get().cartItems.reduce((total, item) => {

@@ -6,6 +6,7 @@ import { useCartStore } from "@/store/useCartStore";
 export default function MobileCartBar() {
   const totalItems = useCartStore((state) => state.totalItems());
   const totalAmount = useCartStore((state) => state.totalPrice("other"));
+  const groupedCount = useCartStore((state) => state.groupedCartCount());
 
   if (totalItems === 0) return null;
 
@@ -14,7 +15,7 @@ export default function MobileCartBar() {
     <div className="fixed md:hidden bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 z-50 flex items-center justify-between">
       {/* Quantity Button */}
       <div className="flex items-center justify-center text-sm font-semibold text-gray-800">
-        {totalItems}
+        {groupedCount}
       </div>
 
       {/* Button */}
