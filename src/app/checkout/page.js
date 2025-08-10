@@ -20,16 +20,33 @@ export default function CheckoutPage() {
   const clientSecret = searchParams.get("clientSecret");
   const amount = searchParams.get("amount");
 
-const appearance = {
-  theme: "stripe",
-  variables: {
-    fontFamily: "Inter, sans-serif",
-    borderRadius: "6px"
-  }
-};
+  // Stripe PaymentElement theme with your brand variables
+  const appearance = {
+    theme: "stripe",
+    variables: {
+      fontFamily: "Inter, sans-serif",
+      borderRadius: "6px",
+      // brand colors
+      colorPrimary: "var(--color-accent)",         // primary action / highlights
+      colorPrimaryText: "#ffffff",
+      colorText: "#111111",
+      colorTextSecondary: "var(--color-muted)",
+      colorDanger: "#dc2626",
+      colorBackground: "#ffffff",                  // keep PE light even if site is dark
+      focusOutline: "var(--color-accent)",
+    },
+    // PayPal only exposes a few branded colors; pick the closest to your blue
+    rules: {
+      ".PaymentElement--paypal": {
+        "--paypal-button-color": "blue",
+        "--paypal-button-border-radius": "6px",
+        "--paypal-button-height": "40px",
+      },
+    },
+  };
 
   if (!clientSecret) {
-    return <p className="p-4 text-accent">No payment found.</p>;
+    return <p className="p-4 text-[var(--color-accent)]">No payment found.</p>;
   }
 
   return (
@@ -45,11 +62,7 @@ function CheckoutForm({ amount, router }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!stripe || !elements) {
-      console.log("Stripe.js has not loaded yet.");
-      return;
-    }
+    if (!stripe || !elements) return;
 
     const { paymentIntent, error } = await stripe.confirmPayment({
       elements,
@@ -65,26 +78,36 @@ function CheckoutForm({ amount, router }) {
   };
 
   return (
-    <Card className="max-w-md mx-auto mt-10 border border-gray-200 shadow-none rounded">
+    <Card className="max-w-md mx-auto mt-10 border shadow-none rounded
+                     border-[var(--color-accent)]/20">
       <CardHeader>
-       <CardTitle className="text-base font-semibold text-gray-900 text-center">
-  Stripe Secure Checkout
-</CardTitle>
+        <CardTitle className="text-base font-semibold text-center
+                              text-[var(--color-accent)]">
+          Stripe Secure Checkout
+        </CardTitle>
       </CardHeader>
-<CardContent>
 
-  <form onSubmit={handleSubmit} className="space-y-4">
-    <PaymentElement />
- <Button
-  type="submit"
-  variant="outline"
-  className="!w-full !bg-[var(--color-accent)] !text-white !border-[var(--color-accent)] hover:!bg-[var(--color-secondary)]"
->
-      Pay £{(amount / 100).toFixed(2)}
-    </Button>
-  </form>
-</CardContent>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <PaymentElement />
 
+          <Button
+            type="submit"
+            variant="outline"
+            className="!w-full
+                       !bg-[var(--color-accent)]
+                       !text-white
+                       !border-[var(--color-accent)]
+                       hover:!bg-[var(--color-secondary)]
+                       focus-visible:ring-2
+                       focus-visible:ring-[var(--color-accent)]
+                       focus-visible:ring-offset-2
+                       focus-visible:ring-offset-white"
+          >
+            Pay £{(amount / 100).toFixed(2)}
+          </Button>
+        </form>
+      </CardContent>
     </Card>
   );
 }
