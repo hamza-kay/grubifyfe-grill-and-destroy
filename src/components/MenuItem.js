@@ -45,7 +45,7 @@ export default function MenuItem({ item, onClick }) {
           {item.name}
         </h3>
         <p className="text-gray-600 mt-2 text-sm line-clamp-1">
-          {item.description || "Delicious meal prepared with the finest ingredients."}
+          {item.description}
         </p>
         {item.kcal && (
           <p className="text-xs text-gray-500 mt-1">{item.kcal} kcal</p>
