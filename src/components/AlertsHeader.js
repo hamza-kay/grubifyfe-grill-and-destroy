@@ -7,24 +7,35 @@ import Link from "next/link";
 import Image from "next/image";
 
 function isRestaurantCurrentlyOpen(restaurant) {
-  if (!restaurant?.opening_hours || !Array.isArray(restaurant.opening_hours)) return false;
+  if (!restaurant) return false;
+  if (restaurant.accepting_orders !== 1) return false;
+
+  const hours = restaurant.opening_hours;
+  if (!Array.isArray(hours)) return false;
 
   const now = new Date();
-  const day = now.getDay(); // Sunday = 0
-  const today = restaurant.opening_hours.find(h => h.DayOfWeek === day);
-  if (!today) return false;
+  const day = now.getDay();
+  const nowMins = now.getHours() * 60 + now.getMinutes();
 
-  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+  const toMins = (t) => {
+    const [h, m] = t.split(":").map(Number);
+    return h * 60 + m;
+  };
 
-  const [openHour, openMin] = today.OpenTime.split(":").map(Number);
-  const [closeHour, closeMin] = today.CloseTime.split(":").map(Number);
+  const today = hours.filter((h) => h.DayOfWeek === day);
+  const yesterday = (day + 6) % 7;
+  const yesterdaysOvernights = hours
+    .filter((h) => h.DayOfWeek === yesterday)
+    .filter((h) => toMins(h.CloseTime) <= toMins(h.OpenTime));
 
-  const openMinutes = openHour * 60 + openMin;
-  const closeMinutes = closeHour * 60 + closeMin;
+  const isWithin = (open, close) => {
+    const o = toMins(open), c = toMins(close);
+    return c > o ? nowMins >= o && nowMins < c : nowMins >= o || nowMins < c;
+  };
 
-  const isWithinHours = nowMinutes >= openMinutes && nowMinutes <= closeMinutes;
-
-  return isWithinHours && restaurant.accepting_orders === 1;
+  return [...today, ...yesterdaysOvernights].some((h) =>
+    isWithin(h.OpenTime, h.CloseTime)
+  );
 }
 
 function getTodayHours(opening_hours) {
@@ -40,6 +51,7 @@ export default function AlertsHeader({ restaurant }) {
 
   const isRestaurantOpen = isRestaurantCurrentlyOpen(restaurant);
   const todayHours = getTodayHours(restaurant.opening_hours);
+  console.log(restaurant)
 
 return (
 <div className="w-full bg-gray-50 py-8">
