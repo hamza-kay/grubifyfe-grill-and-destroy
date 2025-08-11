@@ -11,47 +11,49 @@ export default function MenuItem({ item, onClick }) {
   return (
     <div
       onClick={onClick}
-      
-
-      className="flex p-0 flex-col h-[350px] w-full bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer"
+      className="
+        w-full bg-white rounded-lg shadow-md overflow-hidden transform transition-transform duration-300 cursor-pointer
+        flex flex-row items-center gap-3 p-2 h-28
+        md:flex-col md:items-stretch md:gap-0 md:p-0 md:h-[350px]
+        md:hover:scale-105
+      "
     >
       {/* IMAGE */}
-      <div className="relative w-full h-56">
-        {showFallback ? (
-          <Image
-            src={fallbackUrl}
-            alt="Fallback"
-            fill
-            className="object-contain p-6 grayscale opacity-50 bg-gray-200"
-            sizes="(max-width: 768px) 100vw, 50vw"
-            priority 
-          />
-        ) : (
-          <Image
-            src={item.image_url}
-            alt={item.name}
-            fill
-            className="object-cover w-full h-full"
-            sizes="(max-width: 768px) 100vw, 50vw"
-            onError={() => setImgError(true)}
-            priority 
-          />
-        )}
+      <div
+        className="
+          relative shrink-0 bg-gray-100 overflow-hidden
+          w-24 h-24 rounded-md
+          md:w-full md:h-[200px] md:rounded-none
+        "
+      >
+        <Image
+          src={showFallback ? fallbackUrl : item.image_url}
+          alt={item.name || "Menu item"}
+          fill
+          className={showFallback ? "object-contain p-6 grayscale opacity-50" : "object-cover"}
+          sizes="(max-width: 768px) 96px, (min-width: 768px) 100vw"
+          onError={() => setImgError(true)}
+          priority
+        />
       </div>
 
       {/* CONTENT */}
-      <div className="p-6">
-        <h3 className="text-xl font-semibold text-gray-800 line-clamp-1">
+      <div className="flex-1 px-1 md:px-6 md:pt-6 md:pb-6">
+        <h3 className="font-semibold text-gray-800 line-clamp-1 text-base md:text-xl">
           {item.name}
         </h3>
-        <p className="text-gray-600 mt-2 text-sm line-clamp-1">
+
+        <p className="text-gray-600 mt-1 md:mt-2 line-clamp-1 text-xs md:text-sm">
           {item.description}
         </p>
+
         {item.kcal && (
-          <p className="text-xs text-gray-500 mt-1">{item.kcal} kcal</p>
+          <p className="mt-1 text-[11px] md:text-xs text-gray-500">
+            {item.kcal} kcal
+          </p>
         )}
 
-        <p className="text-accent font-bold text-lg mt-4">
+        <p className="font-bold mt-1 md:mt-4 text-[15px] md:text-lg text-red-600 md:text-accent">
           £{(item.price || Object.values(item.sizes || {})[0] || 0).toFixed(2)}
         </p>
       </div>
