@@ -34,7 +34,7 @@ export default function Header({ sections, restaurant }) {
     <>
       {/* TOP NAV — STICKY */}
 <header className="bg-[#333333] text-gray-800 sticky top-0 z-50">
-  <div className="w-full border-b border-gray-200">
+  <div className="w-full border-b">
    <div className="max-w-7xl mx-auto flex items-center justify-between md:justify-between justify-center  px-4 py-4 sm:py-3 md:py-2">
       <Link href="/" className="flex items-center gap-3">
         <Image
