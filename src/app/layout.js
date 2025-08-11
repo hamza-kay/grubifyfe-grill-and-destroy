@@ -13,7 +13,7 @@ const inter = Inter({
 ;
 
 export const metadata = {
-  title: "Popular Pizza",
+  title: "Speedo Pizza",
 };
 
 export const viewport = {
