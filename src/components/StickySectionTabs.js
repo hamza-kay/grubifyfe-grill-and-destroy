@@ -29,7 +29,8 @@ export default function StickySectionTabs({ sections }) {
      <div className="sticky max-w-7xl mx-auto sm:px-4 z-40 top-[75px] md:top-[60px] lg:top-[65px]">
   
       <nav className="tabs-sticky max-w-7xl mx-auto bg-white shadow-sm rounded-lg py-3">
-      <div className="flex overflow-x-auto px-4 gap-4 lg:justify-center">
+      <div className="flex overflow-x-auto hide-scrollbar px-4 gap-4 lg:justify-center">
+
           {sections.map((section) => (
             <button
               key={section.id}

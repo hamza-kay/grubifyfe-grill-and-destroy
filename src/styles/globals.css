@@ -67,3 +67,12 @@ input:focus {
   border-color: #d1d5db; /* Tailwind gray-300 */
   box-shadow: 0 0 0 3px rgba(209, 213, 219, 0.5);
 }
+
+.hide-scrollbar {
+  scrollbar-width: none;            /* Firefox */
+  -ms-overflow-style: none;         /* IE 10+ */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;                    /* Chrome, Safari */
+}
