@@ -12,24 +12,27 @@ export default function MobileCartBar() {
 
   return (
     
-    <div className="fixed md:hidden bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 z-50 flex items-center justify-between">
-      {/* Quantity Button */}
-      <div className="flex items-center justify-center text-sm font-semibold text-gray-800">
-        {groupedCount}
-      </div>
+<div className="fixed md:hidden bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 z-50 flex items-center">
+  {/* Quantity */}
+  <div className="w-[50px] text-sm font-semibold text-gray-800 text-center">
+    {groupedCount}
+  </div>
 
-      {/* Button */}
-      <Link
-        href="/cart"
-        className="mx-3 bg-[var(--color-accent)] hover:bg-[#B00020] text-white text-sm font-semibold text-center px-4 py-2 rounded"
-      >
-        View your Order
-      </Link>
+  {/* Button */}
+  <div className="flex-1 flex justify-center">
+    <Link
+      href="/cart"
+      className="bg-[var(--color-accent)] hover:bg-[#B00020] text-white text-sm font-semibold px-4 py-2 rounded"
+    >
+      View your Order
+    </Link>
+  </div>
 
-      {/* Total */}
-      <span className="text-sm font-semibold text-gray-800">
-        £{totalAmount.toFixed(2)}
-      </span>
-    </div>
+  {/* Total */}
+  <div className="w-[65px] text-sm font-semibold text-gray-800 text-right">
+    £{totalAmount.toFixed(2)}
+  </div>
+</div>
+
   );
 }
