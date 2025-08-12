@@ -42,11 +42,12 @@ flattenedRequirements.forEach((req) => {
 
   const autoSelectedId = matchingItems.length === 1 ? matchingItems[0].id : null;
 
-  initialSelections[req.key] = {
-    selectedItemId: autoSelectedId,
-    selectedVariation: null,
-    selectedAddons: [],
-  };
+initialSelections[req.key] = {
+  selectedItemId: autoSelectedId,
+  selectedVariation: null,
+  selectedAddons: [],
+  selectedSize: req.size || null, // ⬅️ store preselected size here
+};
 });
 
 
@@ -82,24 +83,32 @@ flattenedRequirements.forEach((req) => {
     let total = 0;
 
     for (const key of Object.keys(selections)) {
-      const { selectedItemId, selectedVariation, selectedAddons } = selections[key];
+        const {
+    selectedItemId,
+    selectedVariation,
+    selectedAddons,
+    selectedSize
+  } = selections[key]; // ✅ now selectedSize is defined
       if (!selectedItemId) continue;
 
       const selectedItem = fullMenuItems.find((i) => i.id === selectedItemId);
       if (!selectedItem) continue;
 
-      if (selectedVariation && selectedItem.variation?.[selectedVariation]) {
-        const varPrice =
-          selectedItem.variation?.[selectedVariation]?.prices?.[req.size] || 0;
-        total += varPrice;
-      }
+
+
+if (selectedVariation && selectedItem.variation?.[selectedVariation]) {
+  const varPrice =
+    selectedItem.variation[selectedVariation].prices?.[selectedSize] || 0;
+  total += varPrice;
+}
+
 
       if (selectedItem.addons) {
         selectedAddons.forEach((addonName) => {
           const addonData = selectedItem.addons[addonName];
           let price = 0;
        if (typeof addonData === "object") {
-  price = addonData[req.size] || 0;
+  price = addonData[selectedSize] || 0;
 } else {
   price = addonData;
 }
@@ -172,14 +181,15 @@ setErrors({});
       variationKey &&
       selectedItem.variation?.[variationKey]
     ) {
-      customPrice += selectedItem.variation?.[variationKey]?.prices?.[req.size] || 0;
+      const selectedSize = selection.selectedSize;
+customPrice += selectedItem.variation?.[variationKey]?.prices?.[selectedSize] || 0;
     }
 
     selection.selectedAddons.forEach((addonName) => {
       const addonData = selectedItem.addons?.[addonName];
       let price = 0;
-     if (typeof addonData === "object") {
-  price = addonData?.[req.size] || 0;
+if (typeof addonData === "object") {
+  price = addonData[selectedSize] || 0;
 } else {
   price = addonData || 0;
 }
@@ -236,10 +246,9 @@ setErrors({});
       src="https://cdn.grubify.co.uk/popularpizza/utensil.webp"
       alt="Fallback image"
       fill
-      
       className="object-contain p-6 grayscale opacity-50"
-      optimized
-      priority
+      unoptimized
+     
     />
   ) : (
     <Image
@@ -249,7 +258,7 @@ setErrors({});
       sizes="(max-width: 768px) 100vw, 640px"
       className="object-cover"
       onError={() => setImgError(true)}
-      priority
+      unoptimized
     />
   )}
 </div>
@@ -374,12 +383,14 @@ const matchingItems = fullMenuItems.filter((item) =>
             <h4 className="text-sm font-semibold text-gray-700 mb-2">
               Add-ons
             </h4>
+          
             <div className="divide-y divide-gray-200 border rounded">
               {Object.keys(selectedItem.addons).map((addonName) => {
+                  const selectedSize = selections[req.key]?.selectedSize;
                 const addonData = selectedItem.addons[addonName];
                 let price = 0;
-               if (typeof addonData === "object") {
-  price = addonData[req.size] || 0;
+      if (typeof addonData === "object") {
+  price = addonData[selectedSize] || 0;
 } else {
   price = addonData;
 }
