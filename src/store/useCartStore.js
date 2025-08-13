@@ -30,12 +30,17 @@ export const useCartStore = create(
           });
         }
       },
-
+  
       removeFromCart: (itemId) => {
         set({
           cartItems: get().cartItems.filter((ci) => ci.id !== itemId),
         });
-      },
+      },     
+
+
+
+      
+
 
 removeDealFromCart: (dealGroupId) => {
   set({
