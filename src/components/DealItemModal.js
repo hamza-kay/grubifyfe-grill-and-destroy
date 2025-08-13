@@ -414,7 +414,7 @@ const matchingItems = fullMenuItems.filter((item) =>
                         onChange={() =>
                           toggleAddon(req.key, addonName)
                         }
-                        className="accent-black w-5 h-5 border-gray-300 rounded"
+                        className="accent-accent w-5 h-5 border-gray-300 rounded"
                       />
                       <span className="text-gray-900">
                         {addonName}

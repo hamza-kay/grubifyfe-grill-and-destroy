@@ -5,6 +5,7 @@ import { useCartStore } from "@/store/useCartStore";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
+
 export default function ItemModal({ item, onClose }) {
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedVariation, setSelectedVariation] = useState(null);
@@ -129,7 +130,7 @@ addToCart({
       fill
       className="object-contain p-6 grayscale opacity-50"
       unoptimized
-      priority
+      
     />
   ) : (
     <Image
@@ -138,7 +139,7 @@ addToCart({
       fill
       className="object-cover"
       onError={() => setImgError(true)}
-      priority
+      unoptimized
     />
   )}
 </div>
@@ -294,7 +295,7 @@ addToCart({
                             type="checkbox"
                             checked={selectedAddons.includes(addonName)}
                             onChange={() => toggleAddon(addonName)}
-                            className="accent-black w-5 h-5 border-gray-300 rounded"
+                            className="accent-accent w-5 h-5 border-gray-300 rounded"
                           />
                           <span className="text-gray-900">
                             {addonName}
