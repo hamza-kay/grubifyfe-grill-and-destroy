@@ -104,7 +104,9 @@ if (selectedVariation && selectedItem.variation?.[selectedVariation]) {
 
 
       if (selectedItem.addons) {
+        const selectedSize = selections[key]?.selectedSize;
         selectedAddons.forEach((addonName) => {
+          
           const addonData = selectedItem.addons[addonName];
           let price = 0;
        if (typeof addonData === "object") {
@@ -185,16 +187,19 @@ setErrors({});
 customPrice += selectedItem.variation?.[variationKey]?.prices?.[selectedSize] || 0;
     }
 
-    selection.selectedAddons.forEach((addonName) => {
-      const addonData = selectedItem.addons?.[addonName];
-      let price = 0;
-if (typeof addonData === "object") {
-  price = addonData[selectedSize] || 0;
-} else {
-  price = addonData || 0;
-}
-      customPrice += price;
-    });
+const selectedSize = selection.selectedSize;
+
+selection.selectedAddons.forEach((addonName) => {
+  const addonData = selectedItem.addons?.[addonName];
+  let price = 0;
+  if (typeof addonData === "object") {
+    price = addonData[selectedSize] || 0;
+  } else {
+    price = addonData || 0;
+  }
+  customPrice += price;
+});
+
 
     addToCart({
       id: selectedItem.id,
