@@ -51,7 +51,7 @@ export default function AlertsHeader({ restaurant }) {
 
   const isRestaurantOpen = isRestaurantCurrentlyOpen(restaurant);
   const todayHours = getTodayHours(restaurant.opening_hours);
-  console.log(restaurant)
+  // console.log(restaurant)
 
 return (
 <div className="w-full bg-gray-50 py-8">
