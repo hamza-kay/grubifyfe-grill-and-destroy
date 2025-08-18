@@ -10,6 +10,8 @@ import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { AppIdContext } from "@/components/AppIdProvider";
 import { FormSchema } from "@/lib/formSchema";
+import { v4 as uuidv4 } from "uuid";
+
 
 
 export default function OrderSummary() {
@@ -138,7 +140,7 @@ const { appId } = useContext(AppIdContext);
 
   const grouped = {};
   cartItems.forEach((item) => {
-    const groupKey = item.parentDealId || item.id;
+    const groupKey = item.parentDealId || item.cartLineId;
     if (!grouped[groupKey]) grouped[groupKey] = [];
     grouped[groupKey].push(item);
   });
@@ -175,7 +177,7 @@ const { appId } = useContext(AppIdContext);
                     </div>
                     <ul className="mt-2 space-y-1 ml-4 text-sm text-gray-700">
                       {children.map((child, index) => (
-                        <li key={index}>
+                        <li key={child.cartLineId}>
                           {child.name}
                           {child.variationName && ` - ${child.variationName}`}
                           {child.selectedSize && ` (${typeof child.selectedSize === 'string' ? child.selectedSize : `${child.selectedSize}"`})`}
@@ -191,7 +193,7 @@ const { appId } = useContext(AppIdContext);
               } else {
                 return items.map((item) => (
                   <div
-                    key={item.id}
+                    key={item.cartLineId}
                     className="flex justify-between items-start border-b border-gray-200 pb-4 last:border-none"
                   >
                     <div className="flex-1">
@@ -206,7 +208,7 @@ const { appId } = useContext(AppIdContext);
                       <div className="mt-2 flex items-center gap-2">
                         <button
                           className="w-7 h-7 border border-accent text-accent bg-white hover:bg-accent/10 rounded flex items-center justify-center transition-colors"
-                          onClick={() => decreaseQuantity(item.id)}
+                          onClick={() => decreaseQuantity(item.cartLineId)}
                         >
                           <Minus className="w-3 h-3" />
                         </button>
@@ -215,7 +217,7 @@ const { appId } = useContext(AppIdContext);
                         </span>
                         <button
                           className="w-7 h-7 border border-accent text-accent bg-white hover:bg-accent/10 rounded flex items-center justify-center transition-colors"
-                          onClick={() => increaseQuantity(item.id)}
+                          onClick={() => increaseQuantity(item.cartLineId)}
                         >
                           <Plus className="w-3 h-3" />
                         </button>
@@ -226,7 +228,7 @@ const { appId } = useContext(AppIdContext);
                         £{(item.price * item.quantity).toFixed(2)}
                       </p>
                       <button
-                        onClick={() => removeFromCart(item.id)}
+                        onClick={() => removeFromCart(item.cartLineId)}
                         className="text-gray-400 hover:text-accent transition"
                       >
                         <X className="w-4 h-4" />

@@ -1,42 +1,45 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { v4 as uuidv4 } from "uuid";
+
+const withLineId = (item) => ({
+  cartLineId: item.cartLineId || uuidv4(),
+  ...item,
+});
 
 export const useCartStore = create(
   persist(
     (set, get) => ({
       cartItems: [],
 
-      addToCart: (item) => {
-        const existing = get().cartItems.find(
-          (ci) =>
-            ci.id === item.id &&
-            JSON.stringify(ci.selectedModifiers || []) ===
-              JSON.stringify(item.selectedModifiers || [])
-        );
+      
 
-        if (existing) {
-          set({
-            cartItems: get().cartItems.map((ci) =>
-              ci.id === item.id &&
-              JSON.stringify(ci.selectedModifiers || []) ===
-                JSON.stringify(item.selectedModifiers || [])
-                ? { ...ci, quantity: ci.quantity + item.quantity }
-                : ci
-            ),
-          });
-        } else {
-          set({
-            cartItems: [...get().cartItems, item],
-          });
-        }
-      },
-  
-      removeFromCart: (itemId) => {
-        set({
-          cartItems: get().cartItems.filter((ci) => ci.id !== itemId),
-        });
-      },     
+addToCart: (item) => {
+  const sameLine = (a, b) =>
+    a.id === b.id &&
+    (a.parentDealId ?? null) === (b.parentDealId ?? null) &&
+    (a.selectedVariation ?? null) === (b.selectedVariation ?? null) &&
+    (a.selectedSize ?? null) === (b.selectedSize ?? null) &&
+    JSON.stringify(a.selectedAddons || []) === JSON.stringify(b.selectedAddons || []) &&
+    JSON.stringify(a.selectedModifiers || []) === JSON.stringify(b.selectedModifiers || []);
 
+  const line = withLineId(item);
+  const existing = get().cartItems.find((ci) => sameLine(ci, line));
+
+  if (existing) {
+    set({
+      cartItems: get().cartItems.map((ci) =>
+        sameLine(ci, line) ? { ...ci, quantity: ci.quantity + line.quantity } : ci
+      ),
+    });
+  } else {
+    set({ cartItems: [...get().cartItems, line] });
+  }
+},
+
+removeFromCart: (cartLineId) => {
+  set({ cartItems: get().cartItems.filter((ci) => ci.cartLineId !== cartLineId) });
+},
 
 
       
@@ -55,27 +58,23 @@ removeDealFromCart: (dealGroupId) => {
 
 
 
-      increaseQuantity: (itemId) => {
-        set((state) => ({
-          cartItems: state.cartItems.map((item) =>
-            item.id === itemId
-              ? { ...item, quantity: item.quantity + 1 }
-              : item
-          ),
-        }));
-      },
+increaseQuantity: (cartLineId) => {
+  set({
+    cartItems: get().cartItems.map((ci) =>
+      ci.cartLineId === cartLineId ? { ...ci, quantity: ci.quantity + 1 } : ci
+    ),
+  });
+},
 
-      decreaseQuantity: (itemId) => {
-        set((state) => ({
-          cartItems: state.cartItems
-            .map((item) =>
-              item.id === itemId
-                ? { ...item, quantity: Math.max(1, item.quantity - 1) }
-                : item
-            )
-            .filter((item) => item.quantity > 0),
-        }));
-      },
+decreaseQuantity: (cartLineId) => {
+  set({
+    cartItems: get().cartItems
+      .map((ci) =>
+        ci.cartLineId === cartLineId ? { ...ci, quantity: Math.max(1, ci.quantity - 1) } : ci
+      )
+      .filter((ci) => ci.quantity > 0),
+  });
+},
 
       clearCart: () => {
         set({ cartItems: [] });

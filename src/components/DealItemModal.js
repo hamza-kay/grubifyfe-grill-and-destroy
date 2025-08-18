@@ -153,6 +153,7 @@ setErrors({});
 
 
   const parentDealId = uuidv4();
+  const parentCartLineId = uuidv4();
 
   // First, add the main deal item
   addToCart({
@@ -163,6 +164,7 @@ setErrors({});
     totalPrice: parseFloat(totalPrice) * quantity,
     parentDealId,
     isDeal: true,
+    cartLineId: parentCartLineId 
   });
 
   // Then add each selected sub-item
@@ -210,6 +212,7 @@ selection.selectedAddons.forEach((addonName) => {
       variationName,
       selectedAddons: selection.selectedAddons,
       parentDealId,
+      cartLineId: uuidv4()
     });
   });
 

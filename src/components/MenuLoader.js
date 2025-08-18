@@ -8,6 +8,7 @@ import { fetchRestaurantData, fetchSectionItems } from "@/utils/api";
 import MenuItem from "@/components/MenuItem";
 import ItemModal from "@/components/ItemModal";
 import DealItemModal from "@/components/DealItemModal";
+import MealItemModal from "@/components/MealItemModal";
 
 import { useState } from "react";
 
@@ -15,7 +16,7 @@ export default function MenuLoader({ sections }) {
   const { appId } = useContext(AppIdContext);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isDealItem, setIsDealItem] = useState(false);
-  
+  const [isMealItem, setIsMealItem] = useState(false);
 
   const {
     data: restaurantData,
@@ -109,10 +110,18 @@ onClick={() => {
     item.isDeal === true ||
     (Array.isArray(item.requirements) && item.requirements.length > 0);
 
+    // meal if explicit flag OR MealUpgrade block present
+                    const isMeal =
+                      item.isMeal === true ||
+                      !!item.MealUpgrade ||
+                      !!item.mealUpgrade;
+
   console.log("Clicked item:", item);
   console.log("→ isDeal:", isDeal);
+   console.log("→ isMeal:", isMeal);
 
   setIsDealItem(isDeal);
+  setIsMealItem(isMeal);
   setSelectedItem(item);
 }}
 
@@ -141,7 +150,15 @@ onClick={() => {
       }
       onClose={() => setSelectedItem(null)}
     />
-  ) : (
+  )  : isMealItem ? (
+          <MealItemModal
+            mealItem={selectedItem}
+            fullMenuItems={
+        allSectionItems.flatMap(section => section.items)
+      }
+            onClose={() => setSelectedItem(null)}
+          />
+        ) : (
     <ItemModal
       item={selectedItem}
       onClose={() => setSelectedItem(null)}
