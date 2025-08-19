@@ -72,7 +72,7 @@ return (
         />
       </div>
 
-    {  console.log(restaurant.image)}
+   
 
       {/* Right Content */}
       <div className="p-8">
