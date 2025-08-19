@@ -114,7 +114,8 @@ return (
     href={`https://instagram.com/${restaurant.socials.instagram}`}
     target="_blank"
     rel="noopener noreferrer"
-    className="flex items-center gap-3 text-gray-700 hover:text-[#E50914] transition"
+ className="flex items-center gap-3 text-[var(--color-muted)] hover:text-[var(--color-accent)] transition"
+    
   >
     <FaInstagram className="w-4 h-4" />
     <span>{restaurant.socials.instagram}</span>
@@ -126,7 +127,8 @@ return (
     href={`https://www.tiktok.com/@${restaurant.socials.tiktok}`}
     target="_blank"
     rel="noopener noreferrer"
-    className="flex items-center gap-3 text-gray-700 hover:text-[#E50914] transition"
+className="flex items-center gap-3 text-[var(--color-muted)] hover:text-[var(--color-accent)] transition"
+    
   >
     <FaTiktok className="w-4 h-4" />
     <span>{restaurant.socials.tiktok}</span>
