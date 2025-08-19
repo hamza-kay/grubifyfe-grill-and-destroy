@@ -66,7 +66,7 @@ return (
         <Image
           src={restaurant.image || "/images/placeholder.jpg"}
           alt={restaurant.title}
-          fill
+          
           className="object-cover"
           priority
         />
