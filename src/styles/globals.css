@@ -10,18 +10,31 @@
   /* Popular red /*
   /* --color-accent: #E50914;
   --color-secondary: #B00020; */
+    /* --color-destructive: #DC2626 popular red */
 
     /* speedo blue */
-  --color-accent: #0C5AA4;
-  --color-secondary: #094881; /* darker shade for hover */  
+  /* --color-accent: #0C5AA4;
+  --color-secondary: #094881; 
   --color-highlight: #E9C46A;
   --color-muted: #6B7280;
   --color-background: #121212;
-  --color-light: #F3F4F6;
+  --color-light: #F3F4F6; */
+  /* --color-destructive: #0C5AA4;  */
 
-  --color-destructive: #0C5AA4; /* your blue */
-  /* --color-destructive: #DC2626 popular red */
  
+  /* Speedo branding with Grill & Destroy mappings */
+  --color-accent: #ea580c;       /* Order Now orange (was #0C5AA4) */
+  --color-secondary: #c2410c;    /* Darker orange hover (was #094881) */  
+  --color-highlight: #E9C46A;    /* Gold highlight stays */
+  --color-muted: #6B7280;        /* Tailwind gray-500 */
+  --color-background: #111827;   /* Header bg (was #121212) */
+  --color-light: #F3F4F6;        /* Light gray background */
+
+  --color-destructive: #ea580c;  /* same as accent */
+
+
+ 
+
 
 
   

@@ -33,10 +33,10 @@ export default function Header({ sections, restaurant }) {
   return (
     <>
       {/* TOP NAV — STICKY */}
-<header className="bg-[#333333] text-gray-800 sticky top-0 z-50">
+<header className="bg-[var(--color-background)]  sticky top-0 z-50">
   <div className="w-full border-b">
    <div className="max-w-7xl mx-auto flex items-center justify-between md:justify-between justify-center  px-4 py-4 sm:py-3 md:py-2">
-      <Link href="/" className="flex items-center gap-3">
+      {/* <Link href="/" className="flex items-center gap-3">
         <Image
         //  src={restaurant.logo || "/images/placeholder.jpg"}
         src="/logo.png"
@@ -46,6 +46,14 @@ export default function Header({ sections, restaurant }) {
           className="h-[50px] w-auto object-contain"
         />
       </Link>
+       */}
+
+       <Link href="/" className="flex items-center gap-3">
+  <div
+    className="h-[50px] w-[160px] object-contain bg-transparent"
+    aria-hidden="true"
+  />
+</Link>
 
       <div className="hidden md:flex items-center gap-4">
         <Button
