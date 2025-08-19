@@ -145,15 +145,7 @@ const { appId } = useContext(AppIdContext);
     grouped[groupKey].push(item);
   });
 
-  const lineTotal = (item) => {
-  const base = item.price || 0;
-  const mods = (item.selectedModifiers || []).reduce((s, m) => s + (m.price || 0), 0);
-  const addons = (item.selectedAddons || []).reduce((s, a) => s + (a.price || 0), 0);
-  const size = typeof item.selectedSize === "object" ? (item.selectedSize.price || 0) : 0;
-  const variation = typeof item.selectedVariation === "object" ? (item.selectedVariation.price || 0) : 0;
-  const qty = item.quantity || 1;
-  return (base + mods + addons + size + variation) * qty;
-};
+
 
   return (
     <>
@@ -186,21 +178,19 @@ const { appId } = useContext(AppIdContext);
                       </div>
                     </div>
                     <ul className="mt-2 space-y-1 ml-4 text-sm text-gray-700">
-{children.map((child) => {
-  const childTotal = lineTotal(child);  
-  return (
-    <li key={child.cartLineId}>
-      {child.name}
-      {child.variationName && ` - ${child.variationName}`}
-      {child.selectedSize &&
-        ` (${typeof child.selectedSize === "string" ? child.selectedSize : `${child.selectedSize}"`})`}
-      {Array.isArray(child.selectedAddons) && child.selectedAddons.length > 0 && (
-        <> - {child.selectedAddons.join(", ")}</>
-      )}
-      {childTotal > 0 && <> - £{childTotal.toFixed(2)}</>}  
-    </li>
-  );
-})}
+                      {children.map((child, index) => (
+                        <li key={child.cartLineId}>
+                          {child.name}
+                          {child.variationName && ` - ${child.variationName}`}
+                          {child.selectedSize && ` (${typeof child.selectedSize === 'string' ? child.selectedSize : `${child.selectedSize}"`})`}
+                          {Array.isArray(child.selectedAddons) && child.selectedAddons.length > 0 && (
+                            <> - {child.selectedAddons.join(", ")}</>
+                          )}
+                          {(Number(child?.price) || 0) * (Number(child?.quantity) || 1) > 0 && (
+  <> - £{((Number(child?.price) || 0) * (Number(child?.quantity) || 1)).toFixed(2)}</>
+)}
+                        </li>
+                      ))}
                     </ul>
                   </div>
                 );
