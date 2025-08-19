@@ -63,13 +63,14 @@ return (
 
       {/* Left Image */}
       <div className="md:flex-shrink-0 w-full md:w-64 h-64 relative">
-        <Image
-          src={restaurant.image || "/images/placeholder.jpg"}
-          alt={restaurant.title}
-          
-          className="object-cover"
-          priority
-        />
+     <Image
+  src={restaurant.image || "/images/placeholder.jpg"}
+  alt={restaurant.title}
+  width={256}
+  height={256}
+  className="object-cover w-full h-full"
+  priority
+/>
       </div>
 
       {/* Right Content */}
