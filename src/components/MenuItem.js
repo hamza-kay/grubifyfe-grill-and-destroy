@@ -39,7 +39,7 @@ export default function MenuItem({ item, onClick }) {
 
       {/* CONTENT */}
       <div className="flex-1 px-1 md:px-6 md:pt-6 md:pb-6">
-        <h3 className="font-semibold text-gray-800 line-clamp-1 text-base md:text-xl">
+        <h3 className="!font-bold text-gray-800 line-clamp-1 text-base md:text-xl">
           {item.name}
         </h3>
 

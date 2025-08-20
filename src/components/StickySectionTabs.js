@@ -25,6 +25,8 @@ export default function StickySectionTabs({ sections }) {
     });
   };
 
+  
+
   return (
      <div className="sticky max-w-7xl mx-auto sm:px-4 z-40 top-[75px] md:top-[60px] lg:top-[65px]">
   
@@ -35,11 +37,13 @@ export default function StickySectionTabs({ sections }) {
             <button
               key={section.id}
               onClick={() => handleClick(section.id)}
-              className={`text-sm font-medium px-3 py-2 transition whitespace-nowrap ${
-                activeSection === section.id
-                  ? "text-accent border-b-2 border-accent"
-                  : "text-gray-500 hover:text-secondary"
-              }`}
+  className={`px-3 py-2 transition whitespace-nowrap
+    font-semibold tracking-normal
+    text-sm sm:text-base
+    ${activeSection === section.id
+      ? "text-accent"
+      : "text-gray-600 hover:text-secondary"
+    }`}
             >
               {section.title}
             </button>
