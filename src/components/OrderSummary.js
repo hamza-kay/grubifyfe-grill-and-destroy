@@ -290,7 +290,7 @@ const { appId } = useContext(AppIdContext);
           size="lg"
           className="w-full !bg-accent !text-white !hover:bg-secondary"
           onClick={handleCheckout}
-          disabled={cartItems.length === 0}
+          disabled={cartItems.length === 0 || !isValid}
         >
           Proceed to Payment
         </Button>
