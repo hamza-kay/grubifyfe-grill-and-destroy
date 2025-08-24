@@ -23,12 +23,13 @@ export default function CartForm() {
   } = useForm({
     resolver: zodResolver(FormSchema),
     mode: "onBlur",
-    defaultValues: customer,
+    defaultValues: { ...customer, fulfillmentType: "PICKUP" },
   });
 
   const fulfillmentType = watch("fulfillmentType");
 
   useEffect(() => {
+    setValue("fulfillmentType", "PICKUP", { shouldValidate: true });
     const subscription = watch((value) => {
       setCustomer(value);
     });
@@ -81,7 +82,7 @@ export default function CartForm() {
         <CardTitle className="mt-8">Delivery Details</CardTitle>
 
         <div className="flex gap-2 mt-2">
-          <Button
+          {/* <Button
             className={clsx(
               "flex items-center gap-2 px-4 py-2 rounded text-sm font-medium border border-accent transition-colors",
               fulfillmentType === "DELIVERY"
@@ -93,7 +94,7 @@ export default function CartForm() {
           >
             <Bike className="w-4 h-4" />
             Delivery
-          </Button>
+          </Button> */}
           <Button
             className={clsx(
               "flex items-center gap-2 px-4 py-2 rounded text-sm font-medium border border-accent transition-colors",
@@ -109,7 +110,7 @@ export default function CartForm() {
           </Button>
         </div>
 
-        <div className="text-sm text-gray-700 flex items-center gap-2 mt-2">
+        {/* <div className="text-sm text-gray-700 flex items-center gap-2 mt-2">
           {fulfillmentType === "DELIVERY" ? (
             <>
               <Bike className="w-4 h-4 text-gray-500" />
@@ -121,11 +122,16 @@ export default function CartForm() {
               Estimated pickup: <span className="font-medium">15 min</span>
             </>
           )}
-        </div>
+        </div> */}
+
+        <div className="text-sm text-gray-700 flex items-center gap-2 mt-2">
+<Store className="w-4 h-4 text-gray-500" />
+Estimated pickup: <span className="font-medium">30 min</span>
+</div>
 
         <div
           className={clsx(
-            "grid grid-cols-1 gap-4 transition-all duration-300",
+            "hidden grid grid-cols-1 gap-4 transition-all duration-300",
             fulfillmentType === "DELIVERY"
               ? "opacity-100 max-h-[1000px]"
               : "opacity-0 max-h-0 overflow-hidden"
