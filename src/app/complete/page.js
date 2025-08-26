@@ -3,14 +3,19 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { useCartStore } from "@/store/useCartStore";
 
 export default function CompletePage() {
   const router = useRouter();
+  const clearCart = useCartStore((state) => state.clearCart);
 
   useEffect(() => {
+    // ✅ empty the cart immediately when this page is hit
+    clearCart();
+
     const t = setTimeout(() => router.push("/"), 5000);
     return () => clearTimeout(t);
-  }, [router]);
+  }, [clearCart, router]);
 
   return (
     <main className="flex flex-col items-center justify-center min-h-screen px-4 py-10 text-center">
