@@ -100,6 +100,7 @@ export default function ItemModal({ item, onClose }) {
   }
 const numericTotalPrice = parseFloat(totalPrice);
 const cartLineId = uuidv4();
+const variationName = selectedVariation ? item.variation?.[selectedVariation]?.name || null : null;
 
 
 addToCart({
@@ -110,6 +111,7 @@ addToCart({
   selectedAddons,
   selectedSize,
   selectedVariation,
+  variationName,
   totalPrice: numericTotalPrice * quantity,
   cartLineId
 });
