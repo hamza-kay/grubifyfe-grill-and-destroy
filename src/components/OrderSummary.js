@@ -259,12 +259,12 @@ const { appId } = useContext(AppIdContext);
 </div>
 
 
-          <div className="flex justify-between">
+          {/* <div className="flex justify-between">
             <span className="text-gray-600">Delivery Fee</span>
             <span className="font-medium italic text-gray-500">
               To be calculated
             </span>
-          </div>
+          </div> */}
 
           <hr className="my-4" />
 
