@@ -79,7 +79,7 @@ export default function CartForm() {
           </div>
         </div>
 
-        <CardTitle className="mt-8">Delivery Details</CardTitle>
+        <CardTitle className="mt-8">Pickup Details</CardTitle>
 
         <div className="flex gap-2 mt-2">
           {/* <Button
