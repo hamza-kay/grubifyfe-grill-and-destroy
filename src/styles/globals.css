@@ -62,7 +62,7 @@ html, body {
   color: #333;
   background-color: #f3d9bb;  /* Softer, creamier than stark white */
    background-image: url('/broken-noise.png');
-   background-repeat: no-repeat;
+   
   min-height: 100%;
   scroll-behavior: smooth !important;
   
