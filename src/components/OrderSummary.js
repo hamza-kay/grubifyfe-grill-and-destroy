@@ -149,7 +149,7 @@ const { appId } = useContext(AppIdContext);
 
   return (
     <>
-      <Card>
+      <Card className="bg-[var(--color-card-bg)] border border-[var(--color-card-border)]">
         <CardHeader>
           <CardTitle>Your Order</CardTitle>
         </CardHeader>
@@ -285,7 +285,7 @@ const { appId } = useContext(AppIdContext);
         </CardContent>
       </Card>
 
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 shadow-md lg:hidden">
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-[var(--color-card-bg)] border-t border-gray-200 shadow-md lg:hidden">
         <Button
           size="lg"
           className="w-full !bg-accent !text-white !hover:bg-secondary"

@@ -37,7 +37,7 @@ export default function CartForm() {
   }, [watch, setCustomer]);
 
   return (
-    <Card>
+    <Card className="bg-[var(--color-card-bg)] border border-[var(--color-card-border)]">
       <CardHeader>
         <CardTitle>Personal Details</CardTitle>
       </CardHeader>

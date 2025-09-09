@@ -12,7 +12,7 @@ export default function MenuItem({ item, onClick }) {
     <div
       onClick={onClick}
       className="
-        w-full bg-white rounded-lg shadow-md overflow-hidden transform transition-transform duration-300 cursor-pointer
+        w-full bg-[var(--color-card-bg)] border border-[var(--color-card-border)] rounded-lg shadow-md overflow-hidden transform transition-transform duration-300 cursor-pointer
         flex flex-row items-center gap-3 p-2 h-28
         md:flex-col md:items-stretch md:gap-0 md:p-0 md:h-[350px]
         md:hover:scale-105
@@ -21,7 +21,7 @@ export default function MenuItem({ item, onClick }) {
       {/* IMAGE */}
       <div
         className="
-          relative shrink-0 bg-gray-100 overflow-hidden
+          relative shrink-0 bg-[var(--color-card-bg)] overflow-hidden
           w-24 h-24 rounded-md
           md:w-full md:h-[200px] md:rounded-none
         "

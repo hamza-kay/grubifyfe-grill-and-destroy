@@ -12,7 +12,7 @@ export default function MobileCartBar() {
 
   return (
     
-<div className="fixed md:hidden bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 z-50 flex items-center">
+<div className="fixed md:hidden bottom-0 left-0 right-0 bg-[var(--color-card-bg)] border-t border-gray-200 px-4 py-3 z-50 flex items-center">
   {/* Quantity */}
   <div className="w-[50px] text-sm font-semibold text-gray-800 text-center">
     {groupedCount}

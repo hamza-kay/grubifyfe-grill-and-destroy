@@ -218,10 +218,10 @@ export default function MealItemModal({ mealItem, fullMenuItems, onClose }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-0 md:p-4 overflow-auto">
       <div
         ref={modalRef}
-        className="bg-white w-full h-full md:h-auto md:max-w-[640px] md:max-h-[90vh] md:rounded-lg rounded-none shadow-xl overflow-hidden flex flex-col"
+        className="bg-[var(--color-card-bg)] border border-[var(--color-card-border)] w-full h-full md:h-auto md:max-w-[640px] md:max-h-[90vh] md:rounded-lg rounded-none shadow-xl overflow-hidden flex flex-col"
       >
         <div className="flex-1 overflow-y-auto">
-          <div className="relative w-full h-72 md:h-96 overflow-hidden bg-gray-100">
+          <div className="relative w-full h-72 md:h-96 overflow-hidden bg-[var(--color-card-bg)]">
             {(!mealItem.image_url || imgError) ? (
               <Image
                 src="https://cdn.grubify.co.uk/popularpizza/utensil.webp"
@@ -333,7 +333,7 @@ export default function MealItemModal({ mealItem, fullMenuItems, onClose }) {
         </div>
 
         <div className="sticky bottom-0 w-full">
-          <div className="flex items-center justify-between bg-white/80 backdrop-blur border-t px-4 py-3">
+          <div className="flex items-center justify-between bg-[var(--color-card-bg)] backdrop-blur border-t px-4 py-3">
             <button
               onClick={onClose}
               className="text-accent hover:text-secondary text-xl font-bold px-3 py-1 rounded-md bg-gray-100 hover:bg-gray-200 transition"

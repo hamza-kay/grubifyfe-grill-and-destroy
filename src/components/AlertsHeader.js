@@ -54,10 +54,10 @@ export default function AlertsHeader({ restaurant }) {
   // console.log(restaurant)
 
 return (
-<div className="w-full bg-gray-50 py-8">
+<div className="w-full  py-8">
   <div className="max-w-7xl mx-auto px-4">
 
-    <div className="bg-white shadow-lg rounded-lg overflow-hidden md:flex">
+    <div className="bg-[var(--color-card-bg)] border border-[var(--color-card-border)] shadow-lg rounded-lg overflow-hidden md:flex">
 
 
 

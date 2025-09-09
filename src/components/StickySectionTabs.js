@@ -30,7 +30,7 @@ export default function StickySectionTabs({ sections }) {
   return (
      <div className="sticky max-w-7xl mx-auto sm:px-4 z-40 top-[75px] md:top-[60px] lg:top-[65px]">
   
-      <nav className="tabs-sticky max-w-7xl mx-auto bg-white shadow-sm rounded-lg py-3">
+      <nav className="tabs-sticky max-w-7xl mx-auto bg-[var(--color-card-bg)] border border-[var(--color-card-border)] shadow-sm rounded-lg py-3">
       <div className="flex overflow-x-auto hide-scrollbar px-4 gap-4 lg:justify-center">
 
           {sections.map((section) => (
