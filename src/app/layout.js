@@ -31,12 +31,6 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
      <html lang="en" className={`${inter.variable} ${bebas.variable}`}>
-            <head>
-        {/* Android Chrome address bar */}
-        <meta name="theme-color" content="#f5f2ee" />
-        {/* iOS Safari status bar */}
-        <meta name="apple-mobile-web-app-status-bar-style" content="#f5f2ee" />
-      </head>
       <body className="min-h-screen flex flex-col">
         <ClientLayout>
           <div className="flex-grow">
