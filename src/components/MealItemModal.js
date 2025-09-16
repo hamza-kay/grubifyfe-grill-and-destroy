@@ -108,9 +108,13 @@ export default function MealItemModal({ mealItem, fullMenuItems, onClose }) {
           total += Number(price || 0);
         });
       }
+
+        if (isMeal) {
+      total += Number(it?.mealUpcharge || 0);
+    }
     });
     return total;
-  }, [selections, fullMenuItems]);
+  }, [selections, fullMenuItems, isMeal]);
 
   const totalEach = useMemo(() => {
     const delta = isMeal ? mealDelta : 0;
@@ -177,6 +181,9 @@ export default function MealItemModal({ mealItem, fullMenuItems, onClose }) {
           customPrice += price;
         });
 
+        // ⬅️ NEW: fixed upcharge for premium sides in a meal
+customPrice += Number(selectedItem.mealUpcharge || 0);
+
         addToCart({
           id: selectedItem.id,
           name: selectedItem.name,
@@ -211,6 +218,14 @@ export default function MealItemModal({ mealItem, fullMenuItems, onClose }) {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onClose]);
+
+  // helper inside MealItemModal
+const labelWithUpcharge = (it) => {
+  const up = Number(it?.mealUpcharge || 0);
+  return up > 0 && isMeal
+    ? `${it.name} (+£${up.toFixed(2)})`
+    : it.name;
+};
 
   if (!mealItem) return null;
 
@@ -279,7 +294,7 @@ export default function MealItemModal({ mealItem, fullMenuItems, onClose }) {
                     {req.displayName}
                   </h4>
                   {matchingItems.length === 1 ? (
-                    <p className="text-sm text-gray-700 mb-4">{matchingItems[0].name}</p>
+                    <p className="text-sm text-gray-700 mb-4"> {labelWithUpcharge(matchingItems[0])}</p>
                   ) : (
                     <div className="mb-4">
                       <select
@@ -292,7 +307,7 @@ export default function MealItemModal({ mealItem, fullMenuItems, onClose }) {
                         <option value="">Select {req.name}</option>
                         {matchingItems.map((item) => (
                           <option key={item.id} value={item.id}>
-                            {item.name}
+                             {labelWithUpcharge(item)}
                           </option>
                         ))}
                       </select>
