@@ -25,7 +25,7 @@ export default function CheckoutPage() {
     theme: "stripe",
     variables: {
       fontFamily: "Inter, sans-serif",
-      borderRadius: "6px",
+      
       // brand colors
       colorPrimary: "var(--color-accent)",         // primary action / highlights
       colorPrimaryText: "#ffffff",
