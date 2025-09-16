@@ -42,14 +42,7 @@ export default function CheckoutPage() {
         "--paypal-button-border-radius": "6px",
         "--paypal-button-height": "40px",
       },
-        ".PaymentElement": {
-    border: "none",
-    boxShadow: "none",
-  },
-  ".Input": {
-    border: "none",
-    boxShadow: "none",
-  },
+      
     },
   };
 
@@ -86,7 +79,7 @@ function CheckoutForm({ amount, router }) {
   };
 
   return (
-    <Card className="max-w-md mx-auto mt-10  shadow-none rounded">
+    <Card className="max-w-md mx-auto mt-10 !border-0 shadow-none rounded">
       <CardHeader>
         <CardTitle className="text-base font-semibold text-center
                               text-[var(--color-accent)]">
