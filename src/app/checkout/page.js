@@ -25,7 +25,7 @@ export default function CheckoutPage() {
     theme: "stripe",
     variables: {
       fontFamily: "Inter, sans-serif",
-      
+      borderRadius: "6px",
       // brand colors
       colorPrimary: "var(--color-accent)",         // primary action / highlights
       colorPrimaryText: "#ffffff",
@@ -42,6 +42,14 @@ export default function CheckoutPage() {
         "--paypal-button-border-radius": "6px",
         "--paypal-button-height": "40px",
       },
+        ".PaymentElement": {
+    border: "none",
+    boxShadow: "none",
+  },
+  ".Input": {
+    border: "none",
+    boxShadow: "none",
+  },
     },
   };
 
