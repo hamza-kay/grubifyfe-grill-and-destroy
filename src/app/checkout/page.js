@@ -78,8 +78,7 @@ function CheckoutForm({ amount, router }) {
   };
 
   return (
-    <Card className="max-w-md mx-auto mt-10 border shadow-none rounded
-                     border-[var(--color-accent)]/20">
+    <Card className="max-w-md mx-auto mt-10  shadow-none rounded">
       <CardHeader>
         <CardTitle className="text-base font-semibold text-center
                               text-[var(--color-accent)]">
