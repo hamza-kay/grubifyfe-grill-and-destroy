@@ -56,7 +56,7 @@ export default function MenuItem({ item, onClick }) {
         <p className="font-bold mt-1 md:mt-4 text-[15px] md:text-lg text-accent md:text-accent">
           £{(item.price || Object.values(item.sizes || {})[0] || 0).toFixed(2)}
         </p>
-      </div>
+      </div>  
     </div>
   );
 }
