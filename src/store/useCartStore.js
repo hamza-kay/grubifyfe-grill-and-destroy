@@ -98,33 +98,13 @@ decreaseQuantity: (cartLineId) => {
   return uniqueGroups.size;
 },
 
-      totalPrice: () => {
-        return get().cartItems.reduce((total, item) => {
-          const basePrice = item.price || 0;
-
-          const modifiersPrice = (item.selectedModifiers || []).reduce(
-            (sum, mod) => sum + (mod.price || 0),
-            0
-          );
-
-          const addonsPrice = (item.selectedAddons || []).reduce(
-            (sum, addon) => sum + (addon.price || 0),
-            0
-          );
-
-          const sizePrice = item.selectedSize?.price || 0;
-          const variationPrice = item.selectedVariation?.price || 0;
-
-          const itemTotal =
-            (basePrice +
-              modifiersPrice +
-              addonsPrice +
-              sizePrice +
-              variationPrice) * item.quantity;
-
-          return total + itemTotal;
-        }, 0);
-      },
+totalPrice: () => {
+  // Only count parents (isDeal or isMeal)
+  return get().cartItems.reduce((total, item) => {
+    if (!(item.isDeal || item.isMeal)) return total;
+    return total + (Number(item.price) || 0) * (item.quantity || 1);
+  }, 0);
+},
     }),
     {
       name: "cart-storage",
