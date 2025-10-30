@@ -49,8 +49,7 @@ export default function AlertsHeader({ restaurant }) {
 
   if (!restaurant) return null;
 
-  // const isRestaurantOpen = isRestaurantCurrentlyOpen(restaurant);
-  const isRestaurantOpen = false;
+  const isRestaurantOpen = isRestaurantCurrentlyOpen(restaurant);
   const todayHours = getTodayHours(restaurant.opening_hours);
   // console.log(restaurant)
 

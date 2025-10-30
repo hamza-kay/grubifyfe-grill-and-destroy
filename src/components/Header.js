@@ -65,7 +65,7 @@ export default function Header({ sections, restaurant }) {
           Order Now
         </Button>
      <User className="w-5 h-5 text-white" />
-        {/* <Link href="/cart" className="relative">
+        <Link href="" className="relative">
          <ShoppingCart className="w-5 h-5 text-white" />
           {groupedCount > 0 && (
             <span className="absolute -top-2 -right-2 bg-accent text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
@@ -76,7 +76,7 @@ export default function Header({ sections, restaurant }) {
             
           )}
           
-        </Link> */}
+        </Link>
       </div>
     </div>
   </div>

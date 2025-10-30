@@ -21,7 +21,7 @@ export default function MobileCartBar() {
   {/* Button */}
   <div className="flex-1 flex justify-center">
     <Link
-      // href="/cart"
+      href=""
       className="!bg-[var(--color-accent)] !hover:bg-[#B00020] text-white text-sm font-semibold px-4 py-2 rounded"
     >
       View your Order
